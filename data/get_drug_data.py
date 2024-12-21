@@ -9,7 +9,7 @@ url = 'https://api.fda.gov/drug/event.json?'
 params = {
     'api_key': 'wDAtQe86UDtlfEkAjCS4uBBbvBZDCKAt8gNjk2MS',  # Replace with your actual API key
     'search': 'Aspirin',  # You can change this search term to fetch other data
-    'limit': 350  # Increase limit to fetch more data per request
+    'limit': 2  # Increase limit to fetch more data per request
 }
 
 # Path to save the drugs data
