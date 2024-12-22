@@ -8,7 +8,7 @@ from flask import Flask, jsonify, request, render_template
 import pandas as pd
 import os
 
-app = Flask(__name__, template_folder='../frontend/templates')
+app = Flask(__name__, template_folder='../frontend/templates', static_folder='../frontend/static')
 
 @app.route('/')
 def index():
@@ -37,7 +37,7 @@ def get_drug_interactions():
         return jsonify({"message": f"No interactions found for {drug_name}."}), 404
 
     # Format the data to return as JSON
-    result = interactions[['drug1', 'drug2', 'event_name', 'pvalue', 'confidence']].to_dict(orient='records')
+    result = interactions[['drug1', 'drug2', 'event_name']].to_dict(orient='records')
     
     # Return the interactions as a JSON response
     return jsonify({"drug_interactions": result})
