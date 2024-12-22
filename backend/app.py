@@ -1,14 +1,22 @@
-from flask import Flask, jsonify, request
+import warnings
+from werkzeug.exceptions import HTTPException
+
+# Disable Flask development server warnings
+warnings.filterwarnings("ignore", category=UserWarning, module="werkzeug")
+
+from flask import Flask, jsonify, request, render_template
 import pandas as pd
+import os
 
-app = Flask(__name__)
-
-# Load the dataset from the TSV file
-df = pd.read_csv('drugs.tsv', sep='\t')  # Modify the file path if needed
+app = Flask(__name__, template_folder='../frontend/templates')
 
 @app.route('/')
 def index():
-    return "Welcome to PharmaGuard!"
+    return render_template('index.html')  # This will render the index.html file
+
+
+# Load the dataset from the TSV file
+df = pd.read_csv('drugs.tsv', sep='\t')  # Modify the file path if needed
 
 # Create an API endpoint to fetch drug interactions
 @app.route('/drug_interactions', methods=['GET'])
