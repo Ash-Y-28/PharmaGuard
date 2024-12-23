@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Resource</title>
+</head>
+<body>
+    <h1>Welcome to PharmaGuard</h1>
+    <p>You are logged in. Please choose the resource to search for drug interactions.</p>
+    
+    <form action="/drug_interactions" method="get">
+        <label for="resource">Choose Resource:</label>
+        <select id="resource" name="source">
+            <option value="local">Local Database</option>
+            <option value="fda">FDA API</option>
+        </select>
+        <button type="submit">Continue</button>
+    </form>
+
+    <a href="/logout">Logout</a>
+</body>
+</html>
