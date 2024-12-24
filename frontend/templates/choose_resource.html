@@ -9,11 +9,11 @@
     <h1>Welcome to PharmaGuard</h1>
     <p>You are logged in. Please choose the resource to search for drug interactions.</p>
     
-    <form action="/drug_interactions" method="get">
+    <form action="/choose_resource" method="POST">
         <label for="resource">Choose Resource:</label>
         <select id="resource" name="source">
-            <option value="local">Local Database</option>
-            <option value="fda">FDA API</option>
+            <option value="local">Stanford Drug Database</option>
+            <option value="fda">FDA Drug Database</option>
         </select>
         <button type="submit">Continue</button>
     </form>

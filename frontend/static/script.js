@@ -3,16 +3,22 @@ document.addEventListener('DOMContentLoaded', function() {
     const drugInput = document.getElementById('drugInput');
     const resultsContainer = document.getElementById('resultsContainer');
 
+    // Event listener for form submission
     searchButton.addEventListener('click', function(event) {
-        event.preventDefault();
-
+        event.preventDefault();  // Prevent form submission
+        
         const drugName = drugInput.value.trim();
+
+        // Validate if drug name is entered
         if (drugName === '') {
             alert('Please enter a drug name.');
             return;
         }
 
+        // Clear previous results
         resultsContainer.innerHTML = '';
+
+        // Fetch drug interactions from the server
         fetch(`/drug_interactions?drug_name=${drugName}`)
             .then(response => response.json())
             .then(data => {
@@ -23,6 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else if (data.drug_interactions) {
                     let resultHTML = '<h3>Drug Interactions Found:</h3>';
                     resultHTML += '<ul>';
+
                     data.drug_interactions.forEach(interaction => {
                         resultHTML += `
                             <li>
@@ -31,6 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <strong>Event Name:</strong> ${interaction.event_name}<br>
                             </li><br>`;
                     });
+
                     resultHTML += '</ul>';
                     resultsContainer.innerHTML = resultHTML;
                 }

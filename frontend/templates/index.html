@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -15,8 +16,9 @@
         <section>
             <h2>Search Drug Interactions</h2>
             <p>Enter the name of a drug to find interactions:</p>
-            <form id="drugSearchForm">
-                <input type="text" id="drugInput" placeholder="Enter drug name..." required>
+            
+            <form id="drugSearchForm" action="/drug_interactions" method="get">
+                <input type="text" id="drugInput" name="drug_name" placeholder="Enter drug name..." required>
                 <button type="submit" id="searchButton">Search</button>
             </form>
 
@@ -28,7 +30,6 @@
         <p>&copy; 2024 PharmaGuard. All rights reserved.</p>
     </footer>
 
-    <!-- Link to the external JavaScript file -->
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
