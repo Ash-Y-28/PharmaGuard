@@ -70,7 +70,8 @@ def get_drug_interactions():
         if interactions.empty:
             return jsonify({"message": f"No interactions found for {drug_name}."}), 404
 
-        result = interactions[['drug1', 'drug2', 'event_name']].to_dict(orient='records')
+        # Include the proportional_reporting_ratio in the result
+        result = interactions[['drug1', 'drug2', 'event_name', 'proportional_reporting_ratio']].to_dict(orient='records')
         return jsonify({"drug_interactions": result})
 
     # Fetching data from FDA API
@@ -100,6 +101,7 @@ def get_drug_interactions():
 
     else:
         return jsonify({"error": "Invalid source selected."}), 400
+
 
 
 if __name__ == '__main__':

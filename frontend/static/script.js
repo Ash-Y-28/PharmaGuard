@@ -1,116 +1,162 @@
-document.addEventListener('DOMContentLoaded', function() {
+// List of events that should always be classified as 'Severe'
+const alwaysSevereEvents = [
+    "heart attack",
+    "stroke",
+    "cardiac arrest",
+    "cardiac failure",
+    "anaphylaxis",
+    "respiratory failure",
+    "acute kidney failure",
+    "gastrointestinal bleed",
+    "cerebral hemorrhage",
+    "sepsis",
+    "liver failure",
+    "multiple organ failure",
+    "severe arrhythmia",
+    "pulmonary embolism",
+    "severe anemia",
+    "myocardial infarction",
+    "acute respiratory distress syndrome",
+    "severe sepsis",
+    "acute pancreatitis",
+    "severe trauma",
+    "shock",
+    "coma",
+    "severe dehydration",
+    "acute myocardial ischemia",
+    "arrhythmia",
+    "brain death",
+    "massive pulmonary embolism",
+    "acute bacterial endocarditis",
+    "acute bleeding disorders",
+    "severe pneumonia",
+    "severe stroke complications",
+    "severe inflammatory bowel disease",
+    "severe alcohol intoxication",
+    "severe diabetic ketoacidosis",
+    "bacterial meningitis",
+    "severe asthma attack",
+    "toxic shock syndrome",
+    "sudden cardiac death",
+    "massive heart failure",
+    "severe hypoglycemia",
+    "severe allergic reactions",
+    "acute brain injury",
+    "severe burns",
+    "difficulty breathing",
+    "kidney failure",
+    "arterial pressure NOS decreased",
+    "septic shock",
+    "anaemia",
+    
+];
+
+
+// Define the thresholds globally at the beginning of the script
+const mildThreshold = 5;
+const moderateThreshold = 10;
+const severeThreshold = 15;
+
+console.log("Thresholds defined - Mild:", mildThreshold, "Moderate:", moderateThreshold, "Severe:", severeThreshold);
+
+// Handle search for drug interactions
+document.addEventListener('DOMContentLoaded', function () {
     const searchButton = document.getElementById('searchButton');
     const drugInput = document.getElementById('drugInput');
     const resultsContainer = document.getElementById('resultsContainer');
 
-    // Use the source passed from Flask (either 'local' or 'fda')
-    const source = selectedSource;  // This is injected into JS via the script in index.html
-
-    console.log("Selected Source: ", source);  // Check the selected source in the console
-
     // Event listener for form submission
-    searchButton.addEventListener('click', function(event) {
-        event.preventDefault();  // Prevent form submission
-        
+    searchButton.addEventListener('click', function (event) {
+        event.preventDefault();
         const drugName = drugInput.value.trim();
 
-        // Validate if drug name is entered
         if (drugName === '') {
             alert('Please enter a drug name.');
             return;
         }
 
-        // Clear previous results
         resultsContainer.innerHTML = '';
 
-        if (source === 'fda') {
-            // Fetch data from FDA API (drug interactions and warnings/cautions)
-            fetchFDAData(drugName).then(data => {
+        // Assuming source is 'local' as per your current setup
+        fetch(`/drug_interactions?drug_name=${drugName}`)
+            .then(response => response.json())
+            .then(data => {
                 if (data.error) {
                     resultsContainer.innerHTML = `<p>${data.error}</p>`;
                 } else if (data.message) {
                     resultsContainer.innerHTML = `<p>${data.message}</p>`;
-                } else {
-                    let resultHTML = '<h3>Drug Interactions and Warnings/Cautions Found:</h3>';
+                } else if (data.drug_interactions) {
+                    // Filter and categorize interactions based on PRR
+                    const categorizedResults = categorizeInteractions(data.drug_interactions);
+
+                    console.log('Categorized results:', categorizedResults);
+
+                    let resultHTML = '<h3>Drug Interactions Found:</h3>';
                     resultHTML += '<ul>';
 
-                    data.forEach(interaction => {
-                        resultHTML += 
-                            `<li>
-                                <strong>Drug Interactions:</strong> ${interaction.drug_interactions}<br>
-                                <strong>Warnings/Cautions:</strong> ${interaction.warnings_and_cautions}<br>
-                            </li><br>`;
-                    });
+                    resultHTML += displayCategory("Mild", categorizedResults.mild);
+                    resultHTML += displayCategory("Moderate", categorizedResults.moderate);
+                    resultHTML += displayCategory("Severe", categorizedResults.severe);
 
                     resultHTML += '</ul>';
                     resultsContainer.innerHTML = resultHTML;
                 }
+            })
+            .catch(error => {
+                console.error('Error fetching drug interactions:', error);
+                resultsContainer.innerHTML = '<p>There was an error fetching the drug interactions. Please try again later.</p>';
             });
-        } else {
-            // Fetch data from the local database (existing logic)
-            fetch(`/drug_interactions?drug_name=${drugName}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.error) {
-                        resultsContainer.innerHTML = 
-                        `<p>${data.error}</p>`;
-                    } else if (data.message) {
-                        resultsContainer.innerHTML = `<p>${data.message}</p>`;
-                    } else if (data.drug_interactions) {
-                        let resultHTML = '<h3>Drug Interactions Found:</h3>';
-                        resultHTML += '<ul>';
-
-                        // For local data, display drug1, drug2, and event_name
-                        data.drug_interactions.forEach(interaction => {
-                            resultHTML += 
-                                `<li>
-                                    <strong>Drug 1:</strong> ${interaction.drug1}<br>
-                                    <strong>Drug 2:</strong> ${interaction.drug2}<br>
-                                    <strong>Event Name:</strong> ${interaction.event_name}<br>
-                                </li><br>`;
-                        });
-
-                        resultHTML += '</ul>';
-                        resultsContainer.innerHTML = resultHTML;
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching drug interactions:', error);
-                    resultsContainer.innerHTML = '<p>There was an error fetching the drug interactions. Please try again later.</p>';
-                });
-        }
     });
 });
 
-// Function to fetch data from FDA API for both drug interactions and warnings/cautions
-function fetchFDAData(drugName) {
-    const FDA_API_KEY = 'wDAtQe86UDtlfEkAjCS4uBBbvBZDCKAt8gNjk2MS';
-    const apiUrl = `https://api.fda.gov/drug/label.json?search=drug_interactions:"${drugName}"`;
+// Function to categorize the interactions by PRR
+function categorizeInteractions(interactions) {
+    const mild = [];
+    const moderate = [];
+    const severe = [];
 
-    const headers = {
-        'Authorization': `Bearer ${FDA_API_KEY}`
-    };
+    interactions.forEach(interaction => {
+        let prr = parseFloat(interaction.proportional_reporting_ratio);
 
-    return fetch(apiUrl, { headers })
-        .then(response => {
-            if (response.ok) {
-                return response.json();
+        console.log(`PRR for ${interaction.drug1} and ${interaction.drug2}: ${prr}`);
+
+        if (isNaN(prr)) {
+            console.error(`Invalid PRR for ${interaction.drug1} and ${interaction.drug2}, assigning 0 PRR`);
+            prr = 0;
+        }
+
+        // Check if the event name should always be classified as severe
+        const eventName = interaction.event_name.toLowerCase();
+        if (alwaysSevereEvents.includes(eventName)) {
+            severe.push(interaction);  // Always classify these events as severe
+        } else {
+            // Proceed with categorization logic based on PRR
+            if (prr < mildThreshold) {
+                mild.push(interaction);
+            } else if (prr >= mildThreshold && prr < moderateThreshold) {
+                moderate.push(interaction);
+            } else if (prr >= moderateThreshold) {
+                severe.push(interaction);
             }
-            throw new Error('Failed to fetch data from FDA API');
-        })
-        .then(data => {
-            if (data.results) {
-                const interactions = data.results.map(interaction => ({
-                    drug_interactions: interaction.drug_interactions || 'No interactions available',
-                    warnings_and_cautions: interaction.warnings_and_cautions || 'No warnings available'
-                }));
-                return interactions;
-            } else {
-                return { message: `No interactions found for ${drugName}` };
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching FDA data:', error);
-            return { error: 'An error occurred while fetching the data.' };
-        });
+        }
+    });
+
+    return { mild, moderate, severe };
+}
+
+// Function to display categorized results (Mild, Moderate, Severe)
+function displayCategory(category, interactions) {
+    if (interactions.length === 0) {
+        return `<li><strong>${category}:</strong> No interactions found.</li>`;
+    }
+
+    const limitedInteractions = interactions.slice(0, 10);
+
+    let categoryHTML = `<li><strong>${category}:</strong><ul>`;
+    limitedInteractions.forEach(interaction => {
+        categoryHTML += `<li><strong>Drug 1:</strong> ${interaction.drug1} <strong>Drug 2:</strong> ${interaction.drug2} <strong>Event:</strong> ${interaction.event_name}</li>`;
+    });
+    categoryHTML += '</ul></li>';
+
+    return categoryHTML;
 }
