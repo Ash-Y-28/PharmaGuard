@@ -17,7 +17,8 @@
             <h2>Search Drug Interactions</h2>
             <p>Enter the name of a drug to find interactions:</p>
             
-            <form id="drugSearchForm" action="/drug_interactions" method="get">
+            <!-- Form to input drug name -->
+            <form id="drugSearchForm">
                 <input type="text" id="drugInput" name="drug_name" placeholder="Enter drug name..." required>
                 <button type="submit" id="searchButton">Search</button>
             </form>
@@ -29,7 +30,10 @@
     <footer>
         <p>&copy; 2024 PharmaGuard. All rights reserved.</p>
     </footer>
-
+    <script>
+        const selectedSource = "{{ source }}";  // Get the source passed from Flask to JS
+        console.log("Selected Source: ", selectedSource);  // Check in the browser's console
+    </script>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
