@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Function to fetch data from FDA API for both drug interactions and warnings/cautions
     function fetchFDAData(drugName) {
         const FDA_API_KEY = 'wDAtQe86UDtlfEkAjCS4uBBbvBZDCKAt8gNjk2MS';  // Replace with your actual FDA API key
-        const apiUrl = `https://api.fda.gov/drug/label.json?search=drug_interactions:"${drugName}"`;
+        const apiUrl = `https://api.fda.gov/drug/label.json?search=openfda.generic_name:"${drugName}"`;
         const headers = {
             'Authorization': `Bearer ${FDA_API_KEY}`
         };
