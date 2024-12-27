@@ -89,6 +89,15 @@ def login():
     else:
         # Password mismatch
         return "Invalid credentials, please try again."
+    
+@app.route('/guest_login', methods=['POST'])
+def guest_login():
+    # Log in as a guest
+    session['logged_in'] = True
+    session['username'] = "Guest"
+    
+    # Redirect to the main page or resource selection
+    return redirect(url_for('choose_resource'))
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
