@@ -161,7 +161,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const uniqueCombinations = {};
 
         // Limit the number of interactions shown (e.g., first 10)
-        const limitedInteractions = interactions.slice(0, 30);  // Change this number as per your preference
+        const limitedInteractions = interactions.slice(0, 50);  // Change this number as per your preference
 
         // Order events inside parentheses by PRR in descending order
         limitedInteractions.forEach(interaction => {
