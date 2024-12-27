@@ -99,6 +99,37 @@ def guest_login():
     # Redirect to the main page or resource selection
     return redirect(url_for('choose_resource'))
 
+@app.route('/check_username', methods=['GET'])
+def check_username():
+    username = request.args.get('username', '').strip()
+
+    # Ensure a username is provided
+    if not username:
+        return jsonify({'available': False, 'suggestions': []})
+
+    try:
+        conn = sqlite3.connect('backend/users.db')
+        cursor = conn.cursor()
+
+        # Check if the username already exists
+        cursor.execute("SELECT username FROM users WHERE username = ?", (username,))
+        user = cursor.fetchone()
+        conn.close()
+
+        if user:
+            suggestions = [
+                f"{username}{random.randint(100, 999)}",
+                f"{username}_{random.randint(10, 99)}",
+                f"{username}{random.choice(['123', 'xyz', 'abc'])}"
+            ]
+            return jsonify({'available': False, 'suggestions': suggestions})
+        else:
+            # Username is available
+            return jsonify({'available': True})
+    except Exception as e:
+        return jsonify({'available': False, 'suggestions': [], 'error': str(e)})
+
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'GET':
@@ -108,11 +139,37 @@ def register():
         password = request.form.get('password')
         email = request.form.get('email')
 
-        # Hash the password
-        hashed_pw = generate_password_hash(password)
+        try:
+            conn = sqlite3.connect('backend/users.db')
+            cursor = conn.cursor()
 
-        # Generate a 6-digit OTP
-        import random
+            # Check for duplicate username
+            cursor.execute("SELECT * FROM users WHERE username = ?", (username,))
+            existing_username = cursor.fetchone()
+            if existing_username:
+                # Generate suggestions for usernames
+                suggestions = []
+                for i in range(1, 4):  # Generate 3 suggestions
+                    suggested_username = f"{username}_{random.randint(100, 999)}"
+                    cursor.execute("SELECT * FROM users WHERE username = ?", (suggested_username,))
+                    if not cursor.fetchone():
+                        suggestions.append(suggested_username)
+
+                conn.close()
+                suggestions_html = ", ".join([f"<b>{s}</b>" for s in suggestions])
+                return f"The username is already taken. Please choose another one. Suggestions: {suggestions_html}"
+
+            # Check for duplicate email
+            cursor.execute("SELECT * FROM users WHERE email = ?", (email,))
+            existing_email = cursor.fetchone()
+            conn.close()
+            if existing_email:
+                return "An account with this email already exists. Please <a href='/'>log in</a>."
+
+        except Exception as e:
+            return f"An error occurred while checking the database: {e}"
+
+        # If both username and email are unique, proceed with OTP generation and registration
         otp = str(random.randint(100000, 999999))
 
         # Send the OTP via email
@@ -120,16 +177,16 @@ def register():
         body = f"Your OTP for PharmaGuard is {otp}. Please enter it to complete your registration."
         send_email(email, subject, body)
 
-        # Temporarily store user details in session
-        session['pending_user'] = {
-            'username': username,
-            'password': hashed_pw,
-            'email': email,
-            'otp': otp
-        }
+        # Store the OTP and temporary registration data in the session
+        session['otp'] = otp
+        session['temp_username'] = username
+        session['temp_password'] = generate_password_hash(password)
+        session['temp_email'] = email
 
-        # Redirect to OTP verification page
-        return redirect(url_for('verify_otp'))
+        return render_template('verify_otp.html')  # Redirect to OTP verification page
+
+
+
     
 @app.route('/verify_otp', methods=['GET', 'POST'])
 def verify_otp():
@@ -229,6 +286,28 @@ def get_drug_interactions():
 
     else:
         return jsonify({"error": "Invalid source selected."}), 400
+    
+
+@app.route('/check_email', methods=['GET'])
+def check_email():
+    email = request.args.get('email')
+    if not email:
+        return jsonify({'error': 'Email is required'}), 400
+
+    try:
+        conn = sqlite3.connect('backend/users.db')
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM users WHERE email = ?", (email,))
+        user = cursor.fetchone()
+        conn.close()
+
+        if user:
+            return jsonify({'exists': True})
+        else:
+            return jsonify({'exists': False})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 
 
 

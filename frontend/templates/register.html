@@ -3,6 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>PharmaGuard - Register</title>
+    <style>
+        .available {
+            color: green;
+        }
+        .unavailable {
+            color: red;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -13,12 +21,14 @@
         <form method="POST" action="/register">
             <label for="username">Username</label>
             <input type="text" id="username" name="username" required>
+            <span id="username-status"></span>
 
             <label for="password">Password</label>
             <input type="password" id="password" name="password" required>
 
             <label for="email">Email</label>
             <input type="email" id="email" name="email" required>
+            <span id="email-status"></span>
 
             <button type="submit">Sign Up</button>
         </form>
@@ -26,5 +36,63 @@
     <footer>
         <p>&copy; 2024 PharmaGuard. All rights reserved.</p>
     </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const usernameInput = document.getElementById('username');
+            const usernameStatus = document.getElementById('username-status');
+            const emailInput = document.getElementById('email');
+            const emailStatus = document.getElementById('email-status');
+    
+            // Username validation
+            usernameInput.addEventListener('input', function () {
+            const username = usernameInput.value.trim();
+
+            if (username) {
+                fetch(`/check_username?username=${encodeURIComponent(username)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.available) {
+                            usernameStatus.textContent = "Username is available";
+                            usernameStatus.className = "available";
+                        } else {
+                            let suggestionsHTML = "Username is already in use. Suggestions: ";
+                            if (data.suggestions) {
+                                suggestionsHTML += data.suggestions
+                                    .map(suggestion => `<span class="suggestion">${suggestion}</span>`)
+                                    .join(', ');
+                            }
+                            usernameStatus.innerHTML = suggestionsHTML;
+                            usernameStatus.className = "unavailable";
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error checking username:', error);
+                        usernameStatus.textContent = "Error checking username availability";
+                        usernameStatus.className = "unavailable";
+                    });
+            } else {
+                usernameStatus.textContent = "";
+            }
+        });
+    
+        document.getElementById('email').addEventListener('blur', function () {
+            const email = this.value.trim();
+            if (email === '') return;
+
+            fetch(`/check_email?email=${encodeURIComponent(email)}`)
+                .then(response => response.json())
+                .then(data => {
+                    const feedback = document.getElementById('email-feedback');
+                    if (data.exists) {
+                        feedback.textContent = 'Email already exists. Try logging in.';
+                    } else {
+                        feedback.textContent = ''; // Clear the feedback
+                    }
+                })
+                .catch(error => console.error('Error checking email:', error));
+        });
+        });
+    </script>
+    
 </body>
 </html>
