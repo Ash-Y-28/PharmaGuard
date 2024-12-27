@@ -111,25 +111,50 @@ def register():
         body = f"Your OTP for PharmaGuard is {otp}. Please enter it to complete your registration."
         send_email(email, subject, body)
 
-        # Insert the user into the database
-        try:
-            conn = sqlite3.connect('backend/users.db')
-            cursor = conn.cursor()
-            cursor.execute("""
-                INSERT INTO users (username, password, email)
-                VALUES (?, ?, ?)
-            """, (username, hashed_pw, email))
-            conn.commit()
-            conn.close()
+        # Temporarily store user details in session
+        session['pending_user'] = {
+            'username': username,
+            'password': hashed_pw,
+            'email': email,
+            'otp': otp
+        }
 
-            return "Registration successful! Please check your email for the OTP to verify your account."
-        except sqlite3.IntegrityError:
-            return "That username is taken. Please go back and pick another one."
-        except Exception as e:
-            return f"An error occurred: {e}"
-
-
+        # Redirect to OTP verification page
+        return redirect(url_for('verify_otp'))
     
+@app.route('/verify_otp', methods=['GET', 'POST'])
+def verify_otp():
+    if request.method == 'GET':
+        return render_template('verify_otp.html')
+    else:
+        user_otp = request.form.get('otp')  # Get OTP entered by the user
+        pending_user = session.get('pending_user')  # Retrieve pending user details from session
+
+        if not pending_user:
+            return "No pending registration found. Please register again."
+
+        # Validate OTP
+        if user_otp == pending_user['otp']:
+            # OTP is correct; save the user to the database
+            try:
+                conn = sqlite3.connect('backend/users.db')
+                cursor = conn.cursor()
+                cursor.execute("""
+                    INSERT INTO users (username, password, email)
+                    VALUES (?, ?, ?)
+                """, (pending_user['username'], pending_user['password'], pending_user['email']))
+                conn.commit()
+                conn.close()
+
+                # Clear the session after successful registration
+                session.pop('pending_user', None)
+                return "Registration successful! You can now <a href='/'>log in</a>."
+            except Exception as e:
+                return f"An error occurred: {e}"
+        else:
+            # OTP is incorrect
+            return "Invalid OTP. Please try again."
+
 
 @app.route('/choose_resource', methods=['GET', 'POST'])
 def choose_resource():

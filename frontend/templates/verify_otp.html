@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Verify OTP</title>
+</head>
+<body>
+    <header>
+        <h1>Verify OTP</h1>
+        <p>Please check your email for the OTP and enter it below to complete your registration.</p>
+    </header>
+    <main>
+        <form method="POST" action="/verify_otp">
+            <label for="otp">Enter OTP</label>
+            <input type="text" id="otp" name="otp" required>
+            <button type="submit">Verify</button>
+        </form>
+    </main>
+</body>
+</html>
