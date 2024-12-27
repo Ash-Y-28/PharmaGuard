@@ -6,6 +6,30 @@ import os
 import requests
 from werkzeug.security import generate_password_hash
 import sqlite3
+import random
+import smtplib
+from email.mime.text import MIMEText
+
+def generate_otp():
+    return str(random.randint(100000, 999999)) 
+
+def send_email(recipient_email, subject, body):
+    sender_email = "yashsharma2845@gmail.com"  # Replace with your email
+    sender_password = "sqazosdjaxrvsaiz"        # Replace with your email's app-specific password
+
+    # Create the email message
+    msg = MIMEText(body)
+    msg["Subject"] = subject
+    msg["From"] = sender_email
+    msg["To"] = recipient_email
+
+    # Send the email via an SMTP server
+    try:
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+            server.login(sender_email, sender_password)
+            server.sendmail(sender_email, [recipient_email], msg.as_string())
+    except Exception as e:
+        print(f"Error sending email: {e}")
 
 # Disable Flask development server warnings
 warnings.filterwarnings("ignore", category=UserWarning, module="werkzeug")
@@ -71,15 +95,23 @@ def register():
     if request.method == 'GET':
         return render_template('register.html')
     else:
-        # POST: Handle the form submission
         username = request.form.get('username')
         password = request.form.get('password')
-        email = request.form.get('email')  # if you have this field
+        email = request.form.get('email')
 
         # Hash the password
         hashed_pw = generate_password_hash(password)
 
-        # Insert into the database
+        # Generate a 6-digit OTP
+        import random
+        otp = str(random.randint(100000, 999999))
+
+        # Send the OTP via email
+        subject = "Your PharmaGuard OTP"
+        body = f"Your OTP for PharmaGuard is {otp}. Please enter it to complete your registration."
+        send_email(email, subject, body)
+
+        # Insert the user into the database
         try:
             conn = sqlite3.connect('backend/users.db')
             cursor = conn.cursor()
@@ -90,12 +122,13 @@ def register():
             conn.commit()
             conn.close()
 
-            return "Registration successful! You can now <a href='/'>login</a>."
+            return "Registration successful! Please check your email for the OTP to verify your account."
         except sqlite3.IntegrityError:
-            # Username already in use
             return "That username is taken. Please go back and pick another one."
         except Exception as e:
             return f"An error occurred: {e}"
+
+
     
 
 @app.route('/choose_resource', methods=['GET', 'POST'])

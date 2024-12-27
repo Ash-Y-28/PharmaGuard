@@ -2,7 +2,7 @@ import sqlite3
 
 # 1. Connect to (or create) the database file named "users.db".
 #    This file will appear in the same directory as setup_database.py if it doesn't exist already.
-conn = sqlite3.connect('backend/users.db')
+conn = sqlite3.connect('backend/users.db', timeout=10)
 
 # 2. Create a cursor to run SQL commands.
 cursor = conn.cursor()
