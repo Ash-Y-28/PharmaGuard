@@ -35,13 +35,25 @@ document.addEventListener('DOMContentLoaded', function () {
                     data.forEach(interaction => {
                         resultHTML += `
                             <li>
+                            
+                                <strong>Drug Description:</strong> ${interaction.description}<br>
+                                <strong>Drug Ingredient:</strong> ${interaction.active_ingredient}<br>
                                 <strong>Drug Interactions:</strong> ${interaction.drug_interactions}<br>
                                 <strong>Warnings/Cautions:</strong> ${interaction.warnings_and_cautions}<br>
                                 <strong>Boxed Warnigs:</strong> ${interaction.boxed_warning}<br>
                                 <strong>Indications and Usage:</strong> ${interaction.indications_and_usage}<br>
+                                <strong>Purpose of Drug:</strong> ${interaction.purpose}<br>
                                 <strong>Dosage:</strong> ${interaction.dosage_and_administration}<br>
                                 <strong>Contraindications:</strong> ${interaction.contraindications}<br>
                                 <strong>Information for patients:</strong> ${interaction.information_for_patients}<br>
+                                <strong>Consult Doctor or Pharmacist:</strong> ${interaction.ask_doctor_or_pharmacist}<br>
+                                <strong>When not to use:</strong> ${interaction.do_not_use}<br>
+                                <strong>Instructions for use:</strong> ${interaction.instructions_for_use}<br>
+                                <strong>Drug mechanism:</strong> ${interaction.mechanism_of_action}<br>
+                                <strong>Pregnancy:</strong> ${interaction.pregnancy}<br>
+
+
+
 
                             </li><br>
                         `;
@@ -106,13 +118,27 @@ document.addEventListener('DOMContentLoaded', function () {
                     // Extract only the necessary fields (drug_interactions and warnings_and_cautions)
                     const interactions = data.results.map(interaction => ({
                         
+                        description: interaction.description || "No drug description available",
+                        active_ingredient: interaction.active_ingredient || "No information about ingredients available",
                         drug_interactions: interaction.drug_interactions || 'No interactions available',
                         warnings_and_cautions: interaction.warnings_and_cautions || 'No warnings available',
                         boxed_warning: interaction.boxed_warning || 'No boxed warnings available',
                         indications_and_usage: interaction.indications_and_usage || 'No indications and usage available',
+                        purpose: interaction.purpose || "No purpose of drugs available",
                         dosage_and_administration: interaction.dosage_and_administration || 'No dosage information available',
                         contraindications: interaction.contraindications || 'No contraindications available',
-                        information_for_patients: interaction.information_for_patients || 'No information for patients available'
+                        information_for_patients: interaction.information_for_patients || 'No information for patients available',
+                        ask_doctor_or_pharmacist: interaction.ask_doctor_or_pharmacist || "No consultaion information available",
+                        do_not_use: interaction.do_not_use || "No drug avoidance information available",
+                        instructions_for_use: interaction.instructions_for_use || "No drug instructions available",
+                        mechanism_of_action: interaction.mechanism_of_action || "No drug mechanism available",
+                        pregnancy: interaction.pregnancy || "No effect of drug on pregnant women"
+ 
+
+
+
+
+
 
 
                     }));
