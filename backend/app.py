@@ -4,6 +4,8 @@ from flask import Flask, jsonify, request, render_template, redirect, url_for, s
 import pandas as pd
 import os
 import requests
+from werkzeug.security import generate_password_hash
+import sqlite3
 
 # Disable Flask development server warnings
 warnings.filterwarnings("ignore", category=UserWarning, module="werkzeug")
@@ -63,6 +65,38 @@ def login():
     else:
         # Password mismatch
         return "Invalid credentials, please try again."
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'GET':
+        return render_template('register.html')
+    else:
+        # POST: Handle the form submission
+        username = request.form.get('username')
+        password = request.form.get('password')
+        email = request.form.get('email')  # if you have this field
+
+        # Hash the password
+        hashed_pw = generate_password_hash(password)
+
+        # Insert into the database
+        try:
+            conn = sqlite3.connect('backend/users.db')
+            cursor = conn.cursor()
+            cursor.execute("""
+                INSERT INTO users (username, password, email)
+                VALUES (?, ?, ?)
+            """, (username, hashed_pw, email))
+            conn.commit()
+            conn.close()
+
+            return "Registration successful! You can now <a href='/'>login</a>."
+        except sqlite3.IntegrityError:
+            # Username already in use
+            return "That username is taken. Please go back and pick another one."
+        except Exception as e:
+            return f"An error occurred: {e}"
+    
 
 @app.route('/choose_resource', methods=['GET', 'POST'])
 def choose_resource():
