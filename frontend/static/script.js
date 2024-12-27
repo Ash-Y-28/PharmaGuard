@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const searchButton = document.getElementById('searchButton');
     const drugInput = document.getElementById('drugInput');
     const resultsContainer = document.getElementById('resultsContainer');
-
+    
     // Use the source passed from Flask (either 'local' or 'fda')
     const source = selectedSource;  // This is injected into JS via the script in index.html
     console.log("Selected Source: ", source);  // Check the selected source in the console
@@ -222,3 +222,35 @@ document.addEventListener('DOMContentLoaded', function () {
         return categoryHTML;
     }
 });
+
+document.addEventListener('DOMContentLoaded', function () {
+    const logoutForm = document.createElement('form');
+    logoutForm.method = 'POST';
+    logoutForm.action = '/logout';
+
+    const logoutButton = document.createElement('button');
+    logoutButton.type = 'button'; // Change to button type to prevent immediate form submission
+    logoutButton.textContent = 'Logout';
+    logoutButton.style.cssText = `
+        position: fixed; 
+        top: 10px; 
+        right: 10px; 
+        background-color: #ff4d4d; 
+        color: white; 
+        border: none; 
+        padding: 10px 15px; 
+        cursor: pointer; 
+        border-radius: 5px;
+    `;
+
+    // Add confirmation prompt
+    logoutButton.addEventListener('click', function () {
+        if (confirm('Are you sure you want to logout?')) {
+            logoutForm.submit(); // Submit the form if the user confirms
+        }
+    });
+
+    logoutForm.appendChild(logoutButton);
+    document.body.appendChild(logoutForm);
+});
+

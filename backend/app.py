@@ -176,9 +176,10 @@ def choose_resource():
         return render_template('choose_resource.html')  # If GET, show resource choice page
     return redirect(url_for('index'))  # Redirect to login if not logged in
 
-@app.route('/logout')
+@app.route('/logout', methods=['POST'])
 def logout():
-    session.pop('logged_in', None)
+    # Clear all session data
+    session.clear()  # This clears everything in the session
     return redirect(url_for('index'))  # Redirect to login page after logging out
 
 @app.route('/drug_interactions', methods=['GET'])
