@@ -29,14 +29,40 @@ def index():
 
 @app.route('/login', methods=['GET','POST'])
 def login():
+    if request.method == 'GET':
+        # Just show the login form
+        return render_template('login.html')
+
+    # POST method: handle the submitted username/password
     username = request.form.get('username')
     password = request.form.get('password')
 
-    if username == 'admin' and password == '12345':
+    import sqlite3
+    from werkzeug.security import check_password_hash
+
+    conn = sqlite3.connect('backend/users.db')
+    cursor = conn.cursor()
+    # Fetch the user by username
+    cursor.execute("SELECT * FROM users WHERE username = ?", (username,))
+    user_record = cursor.fetchone()  # e.g., (id, username, hashed_pw)
+    conn.close()
+
+    if user_record is None:
+        # User not found in the database
+        return "Invalid credentials, please try again."
+
+    # user_record[2] should be the hashed password from your table
+    hashed_pw_in_db = user_record[2]  
+
+    # Compare hashed password with the user’s submitted password
+    if check_password_hash(hashed_pw_in_db, password):
+        # Password correct—log the user in
         session['logged_in'] = True
-        return redirect(url_for('choose_resource'))  # Redirect to choose resource page
+        session['username'] = username
+        return redirect(url_for('choose_resource'))
     else:
-        return 'Invalid credentials, please try again.'
+        # Password mismatch
+        return "Invalid credentials, please try again."
 
 @app.route('/choose_resource', methods=['GET', 'POST'])
 def choose_resource():
