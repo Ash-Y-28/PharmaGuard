@@ -9,25 +9,67 @@ import sqlite3
 import random
 import smtplib
 from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from flask import send_from_directory
 
 def generate_otp():
     return str(random.randint(100000, 999999)) 
 
-def send_email(recipient_email, subject, body):
+def send_email(recipient_email, subject, otp):
     sender_email = "team.pharmaguard@gmail.com"  # Replace with your email
-    sender_password = "uuyeboymdmarncor"        # Replace with your email's app-specific password
+    sender_password = "uuyeboymdmarncor"        # Replace with your app-specific password
+
+    # HTML content for the email
+    html_body = f"""
+    <html>
+    <body style="font-family: Arial, sans-serif; margin: 0; padding: 0;">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #f4f4f4; padding: 20px;">
+            <tr>
+                <td align="center">
+                    <table width="600px" border="0" cellspacing="0" cellpadding="0" style="background-color: #ffffff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                        <tr>
+                            <td align="center" style="padding-bottom: 20px;">
+                                <img src="{{ url_for('static', filename='PG_Final.jpg') }}" alt="PharmaGuard Banner" style="display: block; width: 200px; height: auto;">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 16px; line-height: 1.5; color: #333333; text-align: left;">
+                                <p>Dear User,</p>
+                                <p>Thank you for signing up with <strong>PharmaGuard</strong>!</p>
+                                <p>Your OTP to complete the registration process is:</p>
+                                <p style="font-size: 24px; font-weight: bold; text-align: center; color: #007BFF;">{otp}</p>
+                                <p>If you did not request this, please ignore this email.</p>
+                                <p style="margin-top: 20px;">Best regards,<br>The PharmaGuard Team</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="center" style="padding-top: 20px; font-size: 12px; color: #888888;">
+                                <p>&copy; 2024 PharmaGuard. All rights reserved.</p>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </body>
+    </html>
+    """
 
     # Create the email message
-    msg = MIMEText(body)
+    msg = MIMEMultipart('alternative')
     msg["Subject"] = subject
     msg["From"] = sender_email
     msg["To"] = recipient_email
+
+    # Attach the HTML content
+    msg.attach(MIMEText(html_body, "html"))
 
     # Send the email via an SMTP server
     try:
         with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
             server.login(sender_email, sender_password)
             server.sendmail(sender_email, [recipient_email], msg.as_string())
+        print("Email sent successfully!")
     except Exception as e:
         print(f"Error sending email: {e}")
 
@@ -173,7 +215,7 @@ def register():
         otp = str(random.randint(100000, 999999))
 
         # Send the OTP via email
-        subject = "Your PharmaGuard OTP"
+        subject = "Welcome to PharmaGuard"
         body = f"Your OTP for PharmaGuard is {otp}. Please enter it to complete your registration."
         send_email(email, subject, body)
 
@@ -309,6 +351,11 @@ def check_email():
             return jsonify({'exists': False})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
+# Route for serving assets
+@app.route('/assets/<path:filename>')
+def serve_assets(filename):
+    return send_from_directory('assets', filename)
 
 
 
