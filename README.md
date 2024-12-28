@@ -8,5 +8,5 @@ PharmaGuard aims to improve medication safety by providing easy-to-understand in
 
 
 
-![PharmaGuard Banner](./assets/PG%20Final.jpg)
+![PharmaGuard Banner](./frontend/static/PG_Final.jpg)
 
