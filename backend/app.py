@@ -29,7 +29,8 @@ def send_email(recipient_email, subject, otp):
                     <table width="600px" border="0" cellspacing="0" cellpadding="0" style="background-color: #ffffff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
                         <tr>
                             <td align="center" style="padding-bottom: 20px;">
-                                <img src="{{ url_for('static', filename='PG_Final.jpg') }}" alt="PharmaGuard Banner" style="display: block; width: 200px; height: auto;">
+                                <img src="https://i.imgur.com/LTuXkir.jpeg" alt="PharmaGuard Banner" style="width: 100%; height: auto;">
+
                             </td>
                         </tr>
                         <tr>
