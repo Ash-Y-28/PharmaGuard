@@ -14,8 +14,8 @@ def generate_otp():
     return str(random.randint(100000, 999999)) 
 
 def send_email(recipient_email, subject, body):
-    sender_email = "yashsharma2845@gmail.com"  # Replace with your email
-    sender_password = "sqazosdjaxrvsaiz"        # Replace with your email's app-specific password
+    sender_email = "team.pharmaguard@gmail.com"  # Replace with your email
+    sender_password = "uuyeboymdmarncor"        # Replace with your email's app-specific password
 
     # Create the email message
     msg = MIMEText(body)
@@ -177,11 +177,13 @@ def register():
         body = f"Your OTP for PharmaGuard is {otp}. Please enter it to complete your registration."
         send_email(email, subject, body)
 
-        # Store the OTP and temporary registration data in the session
-        session['otp'] = otp
-        session['temp_username'] = username
-        session['temp_password'] = generate_password_hash(password)
-        session['temp_email'] = email
+        # Store the OTP and temporary registration data as a dictionary in the session
+        session['pending_user'] = {
+            'username': username,
+            'password': generate_password_hash(password),
+            'email': email,
+            'otp': otp
+        }
 
         return render_template('verify_otp.html')  # Redirect to OTP verification page
 
