@@ -11,6 +11,8 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from flask import send_from_directory
+from flask_cors import CORS
+
 
 def generate_otp():
     return str(random.randint(100000, 999999)) 
@@ -79,8 +81,12 @@ warnings.filterwarnings("ignore", category=UserWarning, module="werkzeug")
 
 app = Flask(__name__, template_folder='../frontend/templates', static_folder='../frontend/static')
 
+CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
+
+
 # Secret key for session management
 app.secret_key = os.urandom(24)
+
 
 # FDA API Key
 FDA_API_KEY = 'wDAtQe86UDtlfEkAjCS4uBBbvBZDCKAt8gNjk2MS'
