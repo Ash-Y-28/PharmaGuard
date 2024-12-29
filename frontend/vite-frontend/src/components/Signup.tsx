@@ -1,38 +1,129 @@
 import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Signup: React.FC = () => {
-  const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
+  const [usernameAvailable, setUsernameAvailable] = useState<boolean | null>(
+    null
+  );
+  const [usernameSuggestions, setUsernameSuggestions] = useState<string[]>([]);
   const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [emailExists, setEmailExists] = useState<boolean | null>(null);
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-  const handleSignup = (e: React.FormEvent) => {
+  // Validate username availability
+  const validateUsername = async (username: string) => {
+    try {
+      const response = await axios.get(
+        `http://127.0.0.1:5003/check_username?username=${username}`
+      );
+      setUsernameAvailable(response.data.available);
+      setUsernameSuggestions(response.data.suggestions || []);
+    } catch (err) {
+      console.error("Error validating username:", err);
+      setUsernameAvailable(null);
+    }
+  };
+
+  // Validate email availability
+  const validateEmail = async (email: string) => {
+    try {
+      const response = await axios.get(
+        `http://127.0.0.1:5003/check_email?email=${email}`
+      );
+      setEmailExists(response.data.exists);
+    } catch (err) {
+      console.error("Error validating email:", err);
+      setEmailExists(null);
+    }
+  };
+
+  // Handle signup
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Signup successful!");
+    setError("");
+
+    try {
+      const response = await axios.post("http://127.0.0.1:5003/register", {
+        username,
+        password,
+        email,
+      });
+
+      if (response.status === 200) {
+        alert("OTP sent to your email. Please verify.");
+        navigate("/verify-otp");
+      }
+    } catch (err: any) {
+      setError(err.response?.data || "Signup failed. Please try again.");
+    }
   };
 
   return (
-    <div>
-      <h1>Signup</h1>
+    <div style={{ padding: "20px", maxWidth: "400px", margin: "0 auto" }}>
+      <h1>Create an Account</h1>
       <form onSubmit={handleSignup}>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email"
-        />
-        <input
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          placeholder="Username"
-        />
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
-        />
-        <button type="submit">Signup</button>
+        <div>
+          <label>Username:</label>
+          <input
+            type="text"
+            value={username}
+            onChange={(e) => {
+              setUsername(e.target.value);
+              validateUsername(e.target.value);
+            }}
+            required
+          />
+          {usernameAvailable === true && (
+            <span style={{ color: "green" }}>Username is available</span>
+          )}
+          {usernameAvailable === false && (
+            <span style={{ color: "red" }}>
+              Username is taken. Suggestions:{" "}
+              {usernameSuggestions.map((suggestion, index) => (
+                <span key={index} style={{ marginLeft: "5px" }}>
+                  {suggestion}
+                </span>
+              ))}
+            </span>
+          )}
+        </div>
+        <div>
+          <label>Password:</label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label>Email:</label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              validateEmail(e.target.value);
+            }}
+            required
+          />
+          {emailExists === true && (
+            <span style={{ color: "red" }}>
+              Email is already registered. Try logging in.
+            </span>
+          )}
+          {emailExists === false && (
+            <span style={{ color: "green" }}>Email is available</span>
+          )}
+        </div>
+        <button type="submit" disabled={emailExists === true}>
+          Sign Up
+        </button>
+        {error && <p style={{ color: "red" }}>{error}</p>}
       </form>
     </div>
   );
