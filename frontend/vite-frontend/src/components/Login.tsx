@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 
 const Login: React.FC = () => {
@@ -18,16 +19,38 @@ const Login: React.FC = () => {
 
       if (response.status === 200) {
         alert("Login successful!");
-        // Handle successful login (e.g., redirect or store user session)
+        // Handle successful login
       }
     } catch (err: any) {
       setError(err.response?.data || "Login failed. Please try again.");
     }
   };
 
+  const handleGuestLogin = async () => {
+    try {
+      const response = await axios.post("http://127.0.0.1:5003/guest_login");
+
+      if (response.status === 200) {
+        alert("Logged in as Guest!");
+        // Handle guest login
+      }
+    } catch (err: any) {
+      setError("Guest login failed. Please try again.");
+    }
+  };
+
   return (
-    <div style={{ padding: "20px", maxWidth: "400px", margin: "0 auto" }}>
-      <h1>Login</h1>
+    <div style={{ padding: "20px", maxWidth: "600px", margin: "0 auto" }}>
+      {/* Header Section */}
+      <div style={{ textAlign: "center", marginBottom: "20px" }}>
+        <h1 style={{ fontSize: "2.5rem", marginBottom: "10px" }}>PharmaGuard</h1>
+        <p style={{ fontSize: "1.2rem", color: "#555" }}>
+          Welcome to PharmaGuard, your trusted source for drug interaction and safety information.
+        </p>
+      </div>
+
+      {/* Login Form */}
+      <h2>Login</h2>
       <form onSubmit={handleLogin}>
         <div>
           <label>Username:</label>
@@ -50,6 +73,29 @@ const Login: React.FC = () => {
         <button type="submit">Login</button>
         {error && <p style={{ color: "red" }}>{error}</p>}
       </form>
+      <button
+        onClick={handleGuestLogin}
+        style={{
+          marginTop: "10px",
+          backgroundColor: "gray",
+          color: "white",
+          border: "none",
+          padding: "10px 20px",
+          borderRadius: "5px",
+          cursor: "pointer",
+        }}
+      >
+        Guest Login
+      </button>
+      <p style={{ marginTop: "10px" }}>
+        Don't have an account? <Link to="/signup">Sign up here</Link>
+      </p>
+
+       {/* Footer Section */}
+       <footer style={{ marginTop: "30px", textAlign: "center", fontSize: "0.9rem", color: "#888" }}>
+        &copy; 2024 PharmaGuard. All rights reserved.
+      </footer>
+      
     </div>
   );
 };
