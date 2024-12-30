@@ -4,7 +4,7 @@ from flask import Flask, jsonify, request, render_template, redirect, url_for
 import pandas as pd
 import os
 import requests
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
 import random
 import smtplib
@@ -195,6 +195,58 @@ def verify_otp():
     except Exception as e:
         print("Error in /verify_otp:", str(e))
         return jsonify({'error': 'Failed to verify OTP'}), 500
+    
+@app.route('/login', methods=['POST'])
+def login():
+    try:
+        data = request.json
+        username = data.get('username')
+        password = data.get('password')
+
+        if not username or not password:
+            return jsonify({'error': 'Username and password are required'}), 400
+
+        # Verify user in the database
+        conn = sqlite3.connect('backend/users.db')
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM users WHERE username = ?", (username,))
+        user_record = cursor.fetchone()
+        conn.close()
+
+        if user_record is None:
+            return jsonify({'error': 'Invalid credentials'}), 401
+
+        hashed_pw_in_db = user_record[2]
+        if not check_password_hash(hashed_pw_in_db, password):
+            return jsonify({'error': 'Invalid credentials'}), 401
+
+        # Generate a JWT token for the user
+        token = jwt.encode(
+            {'username': username, 'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1)},
+            app.config['SECRET_KEY'],
+            algorithm="HS256"
+        )
+
+        return jsonify({'message': 'Login successful', 'token': token}), 200
+    except Exception as e:
+        print("Error in /login:", str(e))
+        return jsonify({'error': 'Failed to login'}), 500
+
+@app.route('/guest_login', methods=['POST'])
+def guest_login():
+    try:
+        # Generate a guest token
+        token = jwt.encode(
+            {'username': 'guest', 'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1)},
+            app.config['SECRET_KEY'],
+            algorithm="HS256"
+        )
+
+        return jsonify({'message': 'Guest login successful', 'token': token}), 200
+    except Exception as e:
+        print("Error in /guest_login:", str(e))
+        return jsonify({'error': 'Failed to login as guest'}), 500
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=5003)

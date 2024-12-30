@@ -1,38 +1,54 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
     try {
-      const response = await axios.post("http://127.0.0.1:5003/login", {
-        username,
-        password,
-      });
+      const response = await axios.post(
+        "http://127.0.0.1:5003/login",
+        { username, password },
+        { headers: { "Content-Type": "application/json" } }
+      );
 
       if (response.status === 200) {
-        alert("Login successful!");
-        // Handle successful login
+        const token = response.data.token;
+
+        // Store the JWT in sessionStorage
+        window.sessionStorage.setItem("jwt_token", token);
+
+        // Navigate to choose_resource
+        navigate("/choose_resource");
       }
     } catch (err: any) {
-      setError(err.response?.data || "Login failed. Please try again.");
+      setError(err.response?.data?.error || "Login failed. Please try again.");
     }
   };
 
   const handleGuestLogin = async () => {
     try {
-      const response = await axios.post("http://127.0.0.1:5003/guest_login");
+      const response = await axios.post(
+        "http://127.0.0.1:5003/guest_login",
+        {},
+        { headers: { "Content-Type": "application/json" } }
+      );
 
       if (response.status === 200) {
-        alert("Logged in as Guest!");
-        // Handle guest login
+        const token = response.data.token;
+
+        // Store the JWT in sessionStorage
+        window.sessionStorage.setItem("jwt_token", token);
+
+        // Navigate to choose_resource
+        navigate("/choose_resource");
       }
     } catch (err: any) {
       setError("Guest login failed. Please try again.");
@@ -91,11 +107,10 @@ const Login: React.FC = () => {
         Don't have an account? <Link to="/signup">Sign up here</Link>
       </p>
 
-       {/* Footer Section */}
-       <footer style={{ marginTop: "30px", textAlign: "center", fontSize: "0.9rem", color: "#888" }}>
+      {/* Footer Section */}
+      <footer style={{ marginTop: "30px", textAlign: "center", fontSize: "0.9rem", color: "#888" }}>
         &copy; 2024 PharmaGuard. All rights reserved.
       </footer>
-      
     </div>
   );
 };

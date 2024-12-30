@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 import VerifyOTP from "./components/VerifyOTP";
+import ChooseResource from "./components/ChooseResource"; // Import the ChooseResource component
 
 const App: React.FC = () => {
   return (
@@ -10,8 +11,9 @@ const App: React.FC = () => {
       <Routes>
         <Route path="/" element={<Navigate to="/login" />} /> {/* Redirect to login */}
         <Route path="/login" element={<Login />} />
-        <Route path="/Signup" element={<Signup />} />
+        <Route path="/signup" element={<Signup />} />
         <Route path="/verify_otp" element={<VerifyOTP />} />
+        <Route path="/choose_resource" element={<ChooseResource />} /> {/* Add ChooseResource route */}
       </Routes>
     </Router>
   );
