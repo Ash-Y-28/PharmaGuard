@@ -1,6 +1,6 @@
 import warnings
 from werkzeug.exceptions import HTTPException
-from flask import Flask, jsonify, request, render_template, redirect, url_for, session
+from flask import Flask, jsonify, request, render_template, redirect, url_for
 import pandas as pd
 import os
 import requests
@@ -10,11 +10,12 @@ import random
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from flask import send_from_directory
 from flask_cors import CORS
+import jwt
+import datetime
 
 def generate_otp():
-    return str(random.randint(100000, 999999)) 
+    return str(random.randint(100000, 999999))
 
 def send_email(recipient_email, subject, otp):
     sender_email = "team.pharmaguard@gmail.com"
@@ -30,7 +31,6 @@ def send_email(recipient_email, subject, otp):
                         <tr>
                             <td align="center" style="padding-bottom: 20px;">
                                 <img src="https://i.imgur.com/LTuXkir.jpeg" alt="PharmaGuard Banner" style="width: 100%; height: auto;">
-
                             </td>
                         </tr>
                         <tr>
@@ -74,26 +74,14 @@ def send_email(recipient_email, subject, otp):
 warnings.filterwarnings("ignore", category=UserWarning, module="werkzeug")
 
 app = Flask(__name__, template_folder='../frontend/templates', static_folder='../frontend/static')
-CORS(app, supports_credentials=True)
 
-@app.after_request
-def add_cors_headers(response):
-    response.headers["Access-Control-Allow-Origin"] = "*"
-    response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
-    response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
-    return response
+app.config['SECRET_KEY'] = "15f396b86a416e88b49d40ad6805be6510312cc0c1ac04c1244cc75bc0c26aa3"
 
-app.secret_key = os.urandom(24)
-FDA_API_KEY = 'wDAtQe86UDtlfEkAjCS4uBBbvBZDCKAt8gNjk2MS'
-df = pd.read_csv('drugs.tsv', sep='\t')
+CORS(app)
 
 @app.route('/')
 def index():
-    if 'logged_in' not in session:
-        return render_template('login.html')
-    else:
-        source = session.get('source', 'local')
-        return render_template('index.html', source=source)
+    return render_template('login.html')
 
 @app.route('/check_username', methods=['GET'])
 def check_username():
@@ -144,57 +132,50 @@ def check_email():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-
 @app.route('/register', methods=['POST'])
 def register():
-    data = request.json  # Accept JSON payload from React
-
-    username = data.get('username')
-    password = data.get('password')
-    email = data.get('email')
-
-    if not username or not password or not email:
-        return jsonify({'error': 'All fields are required'}), 400
-
     try:
-        conn = sqlite3.connect('backend/users.db')
-        cursor = conn.cursor()
+        data = request.json
+        username = data.get('username')
+        password = generate_password_hash(data.get('password'))
+        email = data.get('email')
 
-        cursor.execute("SELECT * FROM users WHERE username = ?", (username,))
-        if cursor.fetchone():
-            return jsonify({'error': 'Username already taken'}), 400
-
-        cursor.execute("SELECT * FROM users WHERE email = ?", (email,))
-        if cursor.fetchone():
-            return jsonify({'error': 'Email already registered'}), 400
+        if not username or not password or not email:
+            return jsonify({'error': 'All fields are required'}), 400
 
         otp = generate_otp()
-        send_email(email, "Welcome to PharmaGuard", otp)
+        pending_user = {'username': username, 'password': password, 'email': email, 'otp': otp}
 
-        session['pending_user'] = {
-            'username': username,
-            'password': generate_password_hash(password),
-            'email': email,
-            'otp': otp
-        }
+        token = jwt.encode(
+            {
+                'pending_user': pending_user,
+                'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=10)
+            },
+            app.config['SECRET_KEY'],
+            algorithm="HS256"
+        )
 
-        conn.close()
-        return jsonify({'message': 'OTP sent to your email. Please verify.'}), 200
+        send_email(email, "Your OTP for PharmaGuard Registration", otp)
 
+        return jsonify({'message': 'OTP sent successfully!', 'token': token}), 200
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        print("Error in /register:", str(e))
+        return jsonify({'error': 'Failed to register'}), 500
 
 @app.route('/verify_otp', methods=['POST'])
 def verify_otp():
-    data = request.json
-    user_otp = data.get('otp')
-    pending_user = session.get('pending_user')
+    try:
+        data = request.json
+        token = data.get('token')
+        user_otp = data.get('otp')
 
-    if not pending_user:
-        return jsonify({'error': 'No pending registration found'}), 400
+        decoded_data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
+        pending_user = decoded_data.get('pending_user')
 
-    if user_otp == pending_user['otp']:
-        try:
+        if not pending_user:
+            return jsonify({'error': 'No pending registration found'}), 400
+
+        if user_otp == pending_user['otp']:
             conn = sqlite3.connect('backend/users.db')
             cursor = conn.cursor()
             cursor.execute(
@@ -204,12 +185,16 @@ def verify_otp():
             conn.commit()
             conn.close()
 
-            session.pop('pending_user', None)
             return jsonify({'message': 'Registration successful!'}), 200
-        except Exception as e:
-            return jsonify({'error': str(e)}), 500
-    else:
-        return jsonify({'error': 'Invalid OTP'}), 400
+        else:
+            return jsonify({'error': 'Invalid OTP'}), 400
+    except jwt.ExpiredSignatureError:
+        return jsonify({'error': 'Token has expired'}), 400
+    except jwt.InvalidTokenError:
+        return jsonify({'error': 'Invalid token'}), 400
+    except Exception as e:
+        print("Error in /verify_otp:", str(e))
+        return jsonify({'error': 'Failed to verify OTP'}), 500
 
 if __name__ == '__main__':
     app.run(debug=True, port=5003)

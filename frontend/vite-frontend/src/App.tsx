@@ -11,7 +11,7 @@ const App: React.FC = () => {
         <Route path="/" element={<Navigate to="/login" />} /> {/* Redirect to login */}
         <Route path="/login" element={<Login />} />
         <Route path="/Signup" element={<Signup />} />
-        <Route path="/verify-otp" element={<VerifyOTP />} />
+        <Route path="/verify_otp" element={<VerifyOTP />} />
       </Routes>
     </Router>
   );

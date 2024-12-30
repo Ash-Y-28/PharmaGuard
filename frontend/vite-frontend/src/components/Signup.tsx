@@ -47,20 +47,32 @@ const Signup: React.FC = () => {
     setError("");
 
     try {
-      const response = await axios.post("http://127.0.0.1:5003/register", {
-        username,
-        password,
-        email,
-      });
+        const response = await fetch("http://localhost:5003/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password, email })
+        });
+        const data = await response.json();
 
-      if (response.status === 200) {
-        alert("OTP sent to your email. Please verify.");
-        navigate("/verify-otp");
-      }
-    } catch (err: any) {
-      setError(err.response?.data || "Signup failed. Please try again.");
+        if (response.ok) {
+            const token = data.token;
+            console.log("JWT Token:", token);
+
+            // Store token in sessionStorage
+            window.sessionStorage.setItem("jwt_token", token);
+
+            // Redirect to verify OTP page
+            alert("OTP sent to the email.Please enter your OTP to complete signup!");
+            navigate("/verify_otp");
+        } else {
+            setError(data.error || "Failed to register.");
+        }
+    } catch (err) {
+        console.error("Error during register:", err);
+        setError("An error occurred during registration. Please try again.");
     }
-  };
+};
+
 
   return (
     <div style={{ padding: "20px", maxWidth: "400px", margin: "0 auto" }}>
