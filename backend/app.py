@@ -246,6 +246,80 @@ def guest_login():
     except Exception as e:
         print("Error in /guest_login:", str(e))
         return jsonify({'error': 'Failed to login as guest'}), 500
+    
+
+@app.route('/drug_interactions', methods=['GET'])
+def drug_interactions():
+    drug_name = request.args.get('drug_name', '').strip()
+
+    if not drug_name:
+        return jsonify({'error': 'Drug name is required'}), 400
+
+    try:
+        # Load the TSV file
+        df = pd.read_csv('drugs.tsv', sep='\t')
+
+        # Filter rows where the drug is either `drug1` or `drug2`
+        interactions = df[(df['drug1'].str.contains(drug_name, case=False, na=False)) |
+                          (df['drug2'].str.contains(drug_name, case=False, na=False))]
+
+        if interactions.empty:
+            return jsonify({'message': f'No interactions found for {drug_name}'}), 200
+
+        # Categorize based on PRR
+        categorized = {'unlikely': [], 'likely': [], 'most_likely': []}
+        for _, row in interactions.iterrows():
+            prr = float(row.get('proportional_reporting_ratio', 0))
+            interaction = {
+                'drug1': row['drug1'],
+                'drug2': row['drug2'],
+                'event_name': row['event_name'],
+                'proportional_reporting_ratio': prr
+            }
+            if prr < 5:
+                categorized['unlikely'].append(interaction)
+            elif 5 <= prr < 15:
+                categorized['likely'].append(interaction)
+            else:
+                categorized['most_likely'].append(interaction)
+        
+        return jsonify(categorized), 200
+    except Exception as e:
+        print("Error processing drug interactions:", e)
+        return jsonify({'error': 'Failed to process drug interactions'}), 500
+
+@app.route('/fda_interactions', methods=['GET'])
+def fda_interactions():
+    drug_name = request.args.get('drug_name', '').strip()
+
+    if not drug_name:
+        return jsonify({'error': 'Drug name is required'}), 400
+
+    try:
+        FDA_API_KEY = 'wDAtQe86UDtlfEkAjCS4uBBbvBZDCKAt8gNjk2MS'
+        api_url = f'https://api.fda.gov/drug/label.json?search=openfda.generic_name:"{drug_name}"'
+        headers = {'Authorization': f'Bearer {FDA_API_KEY}'}
+
+        response = requests.get(api_url, headers=headers)
+        response_data = response.json()
+
+        if 'results' in response_data:
+            # Extract relevant information
+            interactions = [
+                {
+                    'description': res.get('description', 'No description available'),
+                    'active_ingredient': res.get('active_ingredient', 'No active ingredient available'),
+                    'drug_interactions': res.get('drug_interactions', 'No interactions available'),
+                    'warnings_and_cautions': res.get('warnings_and_cautions', 'No warnings available')
+                }
+                for res in response_data['results']
+            ]
+            return jsonify(interactions), 200
+        else:
+            return jsonify({'message': f'No interactions found for {drug_name}'}), 200
+    except Exception as e:
+        print("Error fetching FDA data:", e)
+        return jsonify({'error': 'Failed to fetch FDA interactions'}), 500
 
 
 if __name__ == '__main__':

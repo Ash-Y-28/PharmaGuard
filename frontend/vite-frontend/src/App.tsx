@@ -4,6 +4,7 @@ import Login from "./components/Login";
 import Signup from "./components/Signup";
 import VerifyOTP from "./components/VerifyOTP";
 import ChooseResource from "./components/ChooseResource"; // Import the ChooseResource component
+import DrugSearch from "./components/DrugSearch";
 
 const App: React.FC = () => {
   return (
@@ -14,6 +15,7 @@ const App: React.FC = () => {
         <Route path="/signup" element={<Signup />} />
         <Route path="/verify_otp" element={<VerifyOTP />} />
         <Route path="/choose_resource" element={<ChooseResource />} /> {/* Add ChooseResource route */}
+        <Route path="/drug_search" element={<DrugSearch />} />
       </Routes>
     </Router>
   );

@@ -10,7 +10,7 @@ const ChooseResource: React.FC = () => {
     sessionStorage.setItem("selectedResource", resource);
     alert(`You selected: ${resource}`);
     // Navigate to the next page where the resource will be used
-    navigate("/next_page"); // Update this to your next page route
+    navigate("/drug_search"); // Update this to your next page route
   };
 
   const handleLogout = () => {
