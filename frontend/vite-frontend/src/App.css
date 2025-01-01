@@ -147,6 +147,9 @@ form {
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeIn 1.5s ease-out forwards;
 }
 
 form label {
@@ -282,14 +285,19 @@ div {
   100% { transform: translateY(0); }
 }
 
-form {
-  opacity: 0;
-  transform: translateY(20px);
-  animation: fadeIn 2s ease-out forwards;
-}
-
 @keyframes fadeIn {
   0% { opacity: 0; transform: translateY(20px); }
   100% { opacity: 1; transform: translateY(0); }
+}
+
+.footer-icon {
+  display: inline-block;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.footer-icon:hover {
+  transform: scale(1.2);
+  color: #751a12; /* Bright red for hover effect */
+  text-shadow: 0 0 10px rgba(255, 111, 97, 0.6); /* Optional glow */
 }
 

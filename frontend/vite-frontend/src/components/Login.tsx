@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGithub } from "@fortawesome/free-brands-svg-icons";
+import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
+
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState("");
@@ -122,9 +126,40 @@ const Login: React.FC = () => {
       </p>
 
       {/* Footer Section */}
-      <footer style={{ marginTop: "30px", textAlign: "center", fontSize: "0.9rem", color: "#888" }}>
-        &copy; 2024 PharmaGuard. All rights reserved.
-      </footer>
+      <footer
+  style={{
+    marginTop: "30px",
+    textAlign: "center",
+    fontSize: "0.9rem",
+    color: "#aaaaaa",
+    borderTop: "2px solid",
+    borderImage: "linear-gradient(to right, #61dafb, #007bff) 1",
+    paddingTop: "10px",
+  }}
+>
+  <p>&copy; 2024 PharmaGuard. All rights reserved.</p>
+  <div style={{ marginTop: "10px" }}>
+    <a
+      href="https://github.com/Ash-Y-28/PharmaGuard"
+      target="_blank"
+      rel="noopener noreferrer"
+      style={{ margin: "0 10px", color: "#61dafb", fontSize: "1.5rem" , transition: "all 0.3s ease"}}
+      className="footer-icon"
+    >
+      <FontAwesomeIcon icon={faGithub} />
+      <i className="fab fa-github"></i>
+    </a>
+    <a
+      href="mailto:team.pharmaguard@gmail.com"
+      style={{ margin: "0 10px", color: "#007bff", fontSize: "1.5rem", transition: "all 0.3s ease" }}
+      className="footer-icon"
+    >
+      <FontAwesomeIcon icon={faEnvelope} />
+      <i className="fas fa-envelope"></i>
+    </a>
+  </div>
+</footer>
+
     </div>
   );
 };
