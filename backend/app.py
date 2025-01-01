@@ -266,27 +266,37 @@ def drug_interactions():
         if interactions.empty:
             return jsonify({'message': f'No interactions found for {drug_name}'}), 200
 
-        # Categorize based on PRR
-        categorized = {'unlikely': [], 'likely': [], 'most_likely': []}
+        # Categorize and group interactions
+        categorized = {'unlikely': {}, 'likely': {}, 'most_likely': {}}
+
         for _, row in interactions.iterrows():
             prr = float(row.get('proportional_reporting_ratio', 0))
-            interaction = {
-                'drug1': row['drug1'],
-                'drug2': row['drug2'],
-                'event_name': row['event_name'],
-                'proportional_reporting_ratio': prr
-            }
+            drug_combination = f"{row['drug1']} + {row['drug2']}"
+            event = row['event_name']
+
             if prr < 5:
-                categorized['unlikely'].append(interaction)
+                category = 'unlikely'
             elif 5 <= prr < 15:
-                categorized['likely'].append(interaction)
+                category = 'likely'
             else:
-                categorized['most_likely'].append(interaction)
-        
+                category = 'most_likely'
+
+            if drug_combination not in categorized[category]:
+                categorized[category][drug_combination] = []
+
+            categorized[category][drug_combination].append(event)
+
+        # Convert events to comma-separated strings
+        for category in categorized:
+            for drug_combination in categorized[category]:
+                categorized[category][drug_combination] = ', '.join(categorized[category][drug_combination])
+
         return jsonify(categorized), 200
+
     except Exception as e:
         print("Error processing drug interactions:", e)
         return jsonify({'error': 'Failed to process drug interactions'}), 500
+
 
 @app.route('/fda_interactions', methods=['GET'])
 def fda_interactions():
@@ -310,7 +320,18 @@ def fda_interactions():
                     'description': res.get('description', 'No description available'),
                     'active_ingredient': res.get('active_ingredient', 'No active ingredient available'),
                     'drug_interactions': res.get('drug_interactions', 'No interactions available'),
-                    'warnings_and_cautions': res.get('warnings_and_cautions', 'No warnings available')
+                    'warnings_and_cautions': res.get('warnings_and_cautions', 'No warnings available'),
+                    'boxed_warning': res.get('boxed_warning', 'No warnings available'),
+                    'indications_and_usage': res.get('indications_and_usage', 'No indications and usage information available'),
+                    'purpose': res.get('purpose', 'Purpose of the drug not available'),
+                    'dosage_and_administration': res.get('dosage_and_administration', 'No dosage information available for this drug'),
+                    'contraindications': res.get('contraindications', 'No contraindications of this drug available'),
+                    'information_for_patients': res.get('information_for_patients', 'No information for the patients available'),
+                    'ask_doctor_or_pharmacist': res.get('ask_doctor_or_pharmacist', 'No information available'),
+                    'do_not_use': res.get('do_not_use', 'No information available'),
+                    'instructions_for_use': res.get('instructions_for_use', 'No instructions for use available'),
+                    'mechanism_of_action': res.get('mechanism_of_actio', 'No mechanism available for this drug'),
+                    'pregnancy': res.get('pregnancy', 'No information available')
                 }
                 for res in response_data['results']
             ]

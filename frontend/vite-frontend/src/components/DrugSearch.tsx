@@ -28,12 +28,7 @@ const DrugSearch: React.FC = () => {
       console.log("API Response:", data); // Debug: Log API response to check structure
 
       if (response.ok) {
-        // For local data, categorize PRR
-        if (selectedResource === "Stanford Drug Database" && data) {
-          setResults(data); // Store results for local database
-        } else {
-          setResults(data); // Store results for FDA API
-        }
+        setResults(data); // Store results for both local and FDA data
       } else {
         setError(data.error || "Failed to fetch drug interactions."); // Handle API errors
       }
@@ -59,53 +54,54 @@ const DrugSearch: React.FC = () => {
       {/* Display Error Messages */}
       {error && <p style={{ color: "red" }}>{error}</p>}
 
-      {/* Display Results */}
+      {/* Display Results for Stanford Drug Database */}
       {results && selectedResource === "Stanford Drug Database" && (
         <>
           <h2>Most Likely:</h2>
           <ul>
-            {/* Handle undefined or empty 'mostLikely' */}
-            {results.most_likely?.length ? (
-              results.most_likely.map((item: any, index: number) => (
+            {/* Iterate over the grouped data for 'most_likely' */}
+            {results.most_likely ? (
+              Object.entries(results.most_likely).map(([combination, events], index) => (
                 <li key={index}>
-                  {item.drug1} + {item.drug2}: {item.event_name}
+                  {combination} ({events as string})
                 </li>
               ))
             ) : (
-              <li>No results found</li> // Display fallback if no data exists
+              <li>No results found</li>
             )}
           </ul>
 
           <h2>Likely:</h2>
           <ul>
-            {/* Handle undefined or empty 'likely' */}
-            {results.likely?.length ? (
-              results.likely.map((item: any, index: number) => (
+            {/* Iterate over the grouped data for 'likely' */}
+            {results.likely ? (
+              Object.entries(results.likely).map(([combination, events], index) => (
                 <li key={index}>
-                  {item.drug1} + {item.drug2}: {item.event_name}
+                  {combination} ({events as string})
                 </li>
               ))
             ) : (
-              <li>No results found</li> // Display fallback if no data exists
+              <li>No results found</li>
             )}
           </ul>
 
           <h2>Unlikely:</h2>
           <ul>
-            {/* Handle undefined or empty 'unlikely' */}
-            {results.unlikely?.length ? (
-              results.unlikely.map((item: any, index: number) => (
+            {/* Iterate over the grouped data for 'unlikely' */}
+            {results.unlikely ? (
+              Object.entries(results.unlikely).map(([combination, events], index) => (
                 <li key={index}>
-                  {item.drug1} + {item.drug2}: {item.event_name}
+                  {combination} ({events as string})
                 </li>
               ))
             ) : (
-              <li>No results found</li> // Display fallback if no data exists
+              <li>No results found</li>
             )}
           </ul>
         </>
       )}
 
+      {/* Display Results for FDA API */}
       {results && selectedResource === "FDA API" && (
         <div>
           <h2>Results:</h2>
