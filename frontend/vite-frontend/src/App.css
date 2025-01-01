@@ -1,3 +1,40 @@
+/* Root Styles */
+:root {
+  flex: 1;
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
+/* General Styling */
+html, body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(-45deg, #1a1a1a, #242424, #1a1a1a, #2e2e2e);
+  background-size: 400% 400%;
+  animation: gradientBG 10s ease infinite;
+}
+
+@keyframes gradientBG {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -5,6 +42,26 @@
   text-align: center;
 }
 
+/* Typography */
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+/* Logo Styling */
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -33,10 +90,183 @@
   }
 }
 
+/* Card Styling */
 .card {
   padding: 2em;
 }
 
-.read-the-docs {
-  color: #888;
+/* Enhanced Button Styles */
+button {
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
 }
+button:hover {
+  background-color: #0056b3;
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+button:active {
+  background-color: #004085;
+  transform: translateY(1px) scale(0.98);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}
+
+/* Login Form Styles */
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 400px;
+  margin: 0 auto;
+  background-color: #1e1e1e;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+form label {
+  font-size: 1.2rem;
+  margin-bottom: 5px;
+  color: #ffffff;
+  text-align: left;
+  width: 100%;
+}
+
+form input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #555;
+  border-radius: 5px;
+  background-color: #2a2a2a;
+  color: #fff;
+}
+
+form button {
+  margin-top: 10px;
+}
+
+/* Input Field Enhancements */
+form input:hover,
+form input:focus {
+  outline: none;
+  border-color: #007BFF;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.8);
+  background-color: #2d2d2d;
+}
+
+/* Differentiate Primary and Secondary Buttons */
+button.primary {
+  background-color: #007BFF; /* Bright blue */
+}
+
+button.secondary {
+  background-color: #6c757d; /* Neutral gray */
+}
+
+button.secondary:hover {
+  background-color: #5a6268; /* Darker gray on hover */
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+button.secondary:active {
+  background-color: #4e555b; /* Darker gray on click */
+  transform: translateY(1px) scale(0.98);
+}
+
+/* Header Styles */
+h1 {
+  font-size: 3rem;
+  margin-bottom: 10px;
+  color: #ffffff;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+h1:hover {
+  color: #61dafb; /* Light blue hover effect */
+}
+
+h1::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 3px;
+  background-color: #61dafb;
+  bottom: -5px;
+  left: 0;
+  transition: width 0.3s ease;
+}
+
+h1:hover::after {
+  width: 100%;
+}
+
+p {
+  font-size: 1.2rem;
+  color: #888888; /* Subtle gray for the tagline */
+}
+
+/* Footer Styles */
+footer {
+  margin-top: 30px;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #aaaaaa; /* Dimmed gray */
+  border-top: 2px solid;
+  border-image: linear-gradient(to right, #61dafb, #007bff) 1;
+  padding-top: 10px;
+}
+
+/* Spinner Animation */
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid transparent;
+  border-top: 3px solid #ffffff; /* Spinner color */
+  border-radius: 50%;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Disabled Button Styling */
+button[disabled] {
+  background-color: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+

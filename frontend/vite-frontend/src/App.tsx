@@ -5,6 +5,8 @@ import Signup from "./components/Signup";
 import VerifyOTP from "./components/VerifyOTP";
 import ChooseResource from "./components/ChooseResource"; // Import the ChooseResource component
 import DrugSearch from "./components/DrugSearch";
+import './App.css';
+
 
 const App: React.FC = () => {
   return (

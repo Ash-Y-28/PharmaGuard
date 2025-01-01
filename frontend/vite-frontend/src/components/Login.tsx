@@ -6,13 +6,17 @@ const Login: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false); // Loading state for login
+  const [guestLoading, setGuestLoading] = useState(false); // Loading state for guest login
   const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setLoading(true); // Start loading animation for login
 
     try {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       const response = await axios.post(
         "http://127.0.0.1:5003/login",
         { username, password },
@@ -30,11 +34,17 @@ const Login: React.FC = () => {
       }
     } catch (err: any) {
       setError(err.response?.data?.error || "Login failed. Please try again.");
+    } finally {
+      setLoading(false); // Stop loading animation
     }
   };
 
   const handleGuestLogin = async () => {
+    setError("");
+    setGuestLoading(true); // Start loading animation for guest login
+
     try {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       const response = await axios.post(
         "http://127.0.0.1:5003/guest_login",
         {},
@@ -52,6 +62,8 @@ const Login: React.FC = () => {
       }
     } catch (err: any) {
       setError("Guest login failed. Please try again.");
+    } finally {
+      setGuestLoading(false); // Stop loading animation
     }
   };
 
@@ -86,22 +98,24 @@ const Login: React.FC = () => {
             required
           />
         </div>
-        <button type="submit">Login</button>
+        <button type="submit" className="primary" disabled={loading}>
+          {loading ? <div className="spinner"></div> : "Login"}
+        </button>
         {error && <p style={{ color: "red" }}>{error}</p>}
       </form>
+
       <button
         onClick={handleGuestLogin}
+        className="secondary"
+        disabled={guestLoading}
         style={{
           marginTop: "10px",
-          backgroundColor: "gray",
-          color: "white",
-          border: "none",
           padding: "10px 20px",
           borderRadius: "5px",
           cursor: "pointer",
         }}
       >
-        Guest Login
+        {guestLoading ? <div className="spinner"></div> : "Guest Login"}
       </button>
       <p style={{ marginTop: "10px" }}>
         Don't have an account? <Link to="/signup">Sign up here</Link>
