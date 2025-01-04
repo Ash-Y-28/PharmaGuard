@@ -1,72 +1,59 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
+import './ChooseResource.css';
 
 const ChooseResource: React.FC = () => {
-  const [resource, setResource] = useState("Stanford Drug Database");
   const navigate = useNavigate();
 
-  const handleContinue = () => {
-    // Store the selected resource and navigate to the next page
+  const handleResourceClick = (resource: string) => {
     sessionStorage.setItem("selectedResource", resource);
     alert(`You selected: ${resource}`);
-    // Navigate to the next page where the resource will be used
-    navigate("/drug_search"); // Update this to your next page route
+    navigate("/drug_search");
   };
 
   const handleLogout = () => {
-    // Clear session storage or any other user data
     sessionStorage.clear();
     alert("Logged out successfully!");
-    navigate("/login"); // Redirect to the login page
+    navigate("/login");
   };
 
   return (
-    <div style={{ padding: "20px", maxWidth: "600px", margin: "0 auto" }}>
-      <h1>Welcome to PharmaGuard</h1>
-      <p>You are logged in. Please choose the resource to search for drug interactions.</p>
-      
-      <div style={{ marginBottom: "20px" }}>
-        <label htmlFor="resource" style={{ marginRight: "10px" }}>
-          Choose Resource:
-        </label>
-        <select
-          id="resource"
-          value={resource}
-          onChange={(e) => setResource(e.target.value)}
-          style={{ padding: "5px", borderRadius: "5px" }}
-        >
-          <option value="Stanford Drug Database">Stanford Drug Database</option>
-          <option value="FDA API">FDA Drug Database</option>
-        </select>
-        <button
-          onClick={handleContinue}
-          style={{
-            marginLeft: "10px",
-            backgroundColor: "#007BFF",
-            color: "white",
-            border: "none",
-            padding: "5px 10px",
-            borderRadius: "5px",
-            cursor: "pointer",
-          }}
-        >
-          Continue
-        </button>
-      </div>
+    <div className="choose-resource-root">
+      {/* Header Section */}
+      <header className="choose-header">
+        <h1>Welcome to PharmaGuard</h1>
+        <p>You are logged in. Please choose the resource to search for drug interactions.</p>
+      </header>
 
-      <button
-        onClick={handleLogout}
-        style={{
-          backgroundColor: "red",
-          color: "white",
-          border: "none",
-          padding: "5px 10px",
-          borderRadius: "5px",
-          cursor: "pointer",
-        }}
-      >
-        Logout
-      </button>
+      {/* Cards Section */}
+      <section className="cards-container">
+        <div
+          className="resource-card"
+          onClick={() => handleResourceClick("Stanford Drug Database")}
+        >
+          <h3>Stanford Drug Database</h3>
+          <p>Access a reliable and comprehensive database of drug interactions, curated by experts.</p>
+        </div>
+
+        <div
+          className="resource-card"
+          onClick={() => handleResourceClick("FDA API")}
+        >
+          <h3>FDA Drug Database</h3>
+          <p>Explore drug interactions and warnings directly from the FDA database with detailed insights.</p>
+        </div>
+      </section>
+
+      {/* Footer Section */}
+      <footer className="choose-footer">
+        <div className="user-dropdown">
+          <span>👤 User Menu</span>
+          <ul>
+            <li onClick={handleLogout}>Logout</li>
+          </ul>
+        </div>
+        <p>&copy; 2025 PharmaGuard. All rights reserved.</p>
+      </footer>
     </div>
   );
 };

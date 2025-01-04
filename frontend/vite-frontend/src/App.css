@@ -20,10 +20,11 @@ html, body {
   height: 100%;
   width: 100%;
   margin: 0;
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(-45deg, #1a1a1a, #242424, #1a1a1a, #2e2e2e);
+  background: linear-gradient(-45deg, #0f4c9c, #242424, #1a1a1a, #0f4c9c);
   background-size: 400% 400%;
   animation: gradientBG 10s ease infinite;
 }
