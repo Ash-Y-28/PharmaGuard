@@ -1,159 +1,188 @@
 /* General Page Styles */
 #choose-resource-root {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    background: linear-gradient(-45deg, #1a1a1a, #242424, #1a1a1a, #0f4c9c);
-    background-size: 400% 400%;
-    animation: gradientBG 10s ease infinite;
-  }
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  background: linear-gradient(-45deg, #1a1a1a, #242424, #1a1a1a, #0f4c9c);
+  background-size: 400% 400%;
+  animation: gradientBG 10s ease infinite;
+}
 
-  html, body {
-    height: 100%;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(-45deg, #0f4c9c, #242424, #1a1a1a, #0f4c9c);
-    background-size: 400% 400%;
-    animation: gradientBG 10s ease infinite;
-  }
+html, body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(-45deg, #0f4c9c, #242424, #1a1a1a, #0f4c9c);
+  background-size: 400% 400%;
+  animation: gradientBG 10s ease infinite;
+}
 
-  @keyframes gradientBG {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+@keyframes gradientBG {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Header Section */
+.choose-header p {
+font-size: 1.3rem; /* Slightly larger text for better visibility */
+color: #aaa;
+margin-bottom: 30px; /* Added more space below the paragraph */
+}
+
+.choose-header h1 {
+  font-size: 2.5rem;
+  color: #61dafb;
+  text-shadow: 0px 3px 10px rgba(0, 123, 255, 0.8);
+  animation: fadeIn 1.5s ease-out forwards;
+}
+
+/* Header Section */
+.choose-header p {
+font-size: 1.3rem; /* Slightly larger text for better visibility */
+color: white;
+margin-bottom: 30px; /* Added more space below the paragraph */
+}
+
+/* Cards Section */
+.cards-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px; /* Increased space between cards */
+  margin-top: 70px; /* Adds space between header and cards */
+  width: 100%;
+  max-width: 900px; /* Increased max width for larger cards */
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+
+.resource-card {
+  width: 108%; /* Adjusted for larger cards */
+  background: #1e1e1e;
+  color: white;
+  padding: 30px; /* Increased padding for a larger feel */
+  border-radius: 15px; /* Slightly more rounded corners */
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Enhanced shadow for depth */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: cardEnter 1.5s ease-out forwards;
+}
+
+.resource-card h3 {
+  font-size: 1.8rem; /* Larger heading */
+  margin-bottom: 15px;
+  color: #61dafb;
+}
+
+.resource-card p {
+  font-size: 1.1rem; /* Slightly larger text */
+  color: white;
+}
+
+.resource-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 15px rgba(0, 123, 255, 0.3);
+}
+
+/* Footer Section */
+.choose-footer {
+  text-align: center;
+  margin-top: 70px;
+  font-size: 0.9rem;
+  color: #aaa;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.choose-footer .user-dropdown {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 10px;
+  color: #61dafb;
+  cursor: pointer;
+}
+
+.choose-footer .user-dropdown ul {
+  display: none;
+  position: absolute;
+  background: #1e1e1e;
+  padding: 10px;
+  list-style: none;
+  border-radius: 5px;
+  margin-top: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.choose-footer .user-dropdown:hover ul {
+  display: block;
+}
+
+.choose-footer .user-dropdown ul li {
+  color: white;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.choose-footer .user-dropdown ul li:hover {
+  background: #444;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
   }
-  
-  /* Header Section */
-  .choose-header {
-    text-align: center;
-    margin-bottom: 20px;
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
-  
-  .choose-header h1 {
-    font-size: 2.5rem;
-    color: #61dafb;
-    text-shadow: 0px 3px 10px rgba(0, 123, 255, 0.8);
-    animation: fadeIn 1.5s ease-out forwards;
+}
+
+@keyframes cardEnter {
+  0% {
+    opacity: 0;
+    transform: translateY(50px);
   }
-  
-  .choose-header p {
-    font-size: 1.2rem;
-    color: #aaa;
-    margin-top: 10px;
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
-  
-  /* Cards Section */
-  .cards-container {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-    margin-top: 20px;
-    width: 100%;
-    max-width: 800px;
-    background: none;
-    border: none;
-    box-shadow: none;
-  }
-  
-  .resource-card {
-    width: 45%;
-    background: #1e1e1e;
-    color: white;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-    cursor: pointer;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    animation: cardEnter 1.5s ease-out forwards;
-  }
-  
-  .resource-card h3 {
-    font-size: 1.5rem;
-    margin-bottom: 10px;
-    color: #61dafb;
-  }
-  
-  .resource-card p {
-    font-size: 1rem;
-    color: #aaa;
-  }
-  
-  .resource-card:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 15px rgba(0, 123, 255, 0.3);
-  }
-  
-  /* Footer Section */
-  .choose-footer {
-    text-align: center;
-    margin-top: 30px;
-    font-size: 0.9rem;
-    color: #aaa;
-    padding-top: 20px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-  }
-  
-  .choose-footer .user-dropdown {
-    position: relative;
-    display: inline-block;
-    margin-bottom: 10px;
-    color: #61dafb;
-    cursor: pointer;
-  }
-  
-  .choose-footer .user-dropdown ul {
-    display: none;
-    position: absolute;
-    background: #1e1e1e;
-    padding: 10px;
-    list-style: none;
-    border-radius: 5px;
-    margin-top: 5px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-  }
-  
-  .choose-footer .user-dropdown:hover ul {
-    display: block;
-  }
-  
-  .choose-footer .user-dropdown ul li {
-    color: white;
-    padding: 5px 10px;
-    cursor: pointer;
-  }
-  
-  .choose-footer .user-dropdown ul li:hover {
-    background: #444;
-  }
-  
-  /* Animations */
-  @keyframes fadeIn {
-    0% {
-      opacity: 0;
-      transform: translateY(-20px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  @keyframes cardEnter {
-    0% {
-      opacity: 0;
-      transform: translateY(50px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
+}
+
+/* Align Icon and Title */
+.card-header {
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+gap: 20px; /* Adds space between the text and the icon */
+text-align: center; /* Ensures text is centered */
+}
+
+.card-header i {
+font-size: 1.5rem; /* Adjust icon size */
+color: #61dafb;
+}
+
+.card-header h3 {
+font-size: 1.5rem; /* Keep title size consistent */
+margin: 0;
+color: #61dafb;
+}
+
+/* Adjust Icon Alignment */
+.resource-card .card-header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+}
