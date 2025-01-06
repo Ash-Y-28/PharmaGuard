@@ -186,3 +186,18 @@ display: flex;
 justify-content: space-between;
 align-items: center;
 }
+
+.header-with-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px; /* Space between the icon and text */
+}
+
+.guard-icon {
+  width: 40px; /* Adjust size */
+  height: 45px; /* Adjust size */
+  vertical-align: middle;
+  margin-bottom: -25px;
+  margin-left: 5px;
+}

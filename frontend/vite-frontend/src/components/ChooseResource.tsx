@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import './ChooseResource.css';
+import GuardIcon from '../assets/security.png';
 
 const ChooseResource: React.FC = () => {
   const navigate = useNavigate();
@@ -27,7 +28,10 @@ const ChooseResource: React.FC = () => {
     <div className="choose-resource-root">
       {/* Header Section */}
       <header className="choose-header">
-        <h1>Welcome to PharmaGuard</h1>
+        <div className="header-with-icon">
+          <h1>Welcome to PharmaGuard</h1>
+          <img src={GuardIcon} alt="PharmaGuard Icon" className="guard-icon" />
+        </div>
         <p>You are logged in. Please choose the resource to search for drug interactions.</p>
       </header>
   
@@ -68,5 +72,6 @@ const ChooseResource: React.FC = () => {
       </footer>
     </div>
   );
+  
 }
 export default ChooseResource;
