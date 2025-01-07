@@ -71,11 +71,11 @@ const ChooseResource: React.FC = () => {
 
       {/* Footer Section */}
       <footer className="choose-footer">
-        <div className="user-dropdown">
+        <div className="user-info">
           <span>👤 {username}</span>
-          <ul>
-            <li onClick={handleLogout}>Logout</li>
-          </ul>
+          <div className="logout-circle" title="Logout" onClick={handleLogout}>
+              <i className="fas fa-power-off"></i>
+          </div>
         </div>
         <p>&copy; 2025 PharmaGuard. All rights reserved.</p>
       </footer>

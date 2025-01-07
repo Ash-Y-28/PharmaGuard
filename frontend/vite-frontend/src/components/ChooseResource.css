@@ -94,49 +94,6 @@ margin-bottom: 30px; /* Added more space below the paragraph */
   box-shadow: 0 8px 15px rgba(0, 123, 255, 0.3);
 }
 
-/* Footer Section */
-.choose-footer {
-  text-align: center;
-  margin-top: 70px;
-  font-size: 0.9rem;
-  color: #aaa;
-  padding-top: 20px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.choose-footer .user-dropdown {
-  position: relative;
-  display: inline-block;
-  margin-bottom: 10px;
-  color: #61dafb;
-  cursor: pointer;
-}
-
-.choose-footer .user-dropdown ul {
-  display: none;
-  position: absolute;
-  background: #1e1e1e;
-  padding: 10px;
-  list-style: none;
-  border-radius: 5px;
-  margin-top: 5px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-}
-
-.choose-footer .user-dropdown:hover ul {
-  display: block;
-}
-
-.choose-footer .user-dropdown ul li {
-  color: white;
-  padding: 5px 10px;
-  cursor: pointer;
-}
-
-.choose-footer .user-dropdown ul li:hover {
-  background: #444;
-}
-
 /* Animations */
 @keyframes fadeIn {
   0% {
@@ -265,5 +222,111 @@ text-align: center; /* Ensures text is centered */
 .choose-header h1 span:nth-child(1) { animation-delay: 0.3s; }
 .choose-header h1 span:nth-child(2) { animation-delay: 0.5s; }
 .choose-header h1 span:nth-child(3) { animation-delay: 0.7s; }
+
+/* Footer Section */
+.choose-footer {
+  text-align: center;
+  margin-top: 70px;
+  font-size: 0.9rem;
+  color: #aaa;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* User Info Styling */
+.choose-footer .user-info {
+  display: flex; /* Align items horizontally */
+  align-items: center; /* Vertically center content */
+  justify-content: center; /* Center both elements in the footer */
+  gap: 15px; /* Add spacing between username and the button */
+  font-size: 1.2rem;
+  color: #61dafb; /* Light blue for username */
+  cursor: pointer;
+}
+
+/* Logout Circle Button */
+.choose-footer .user-info .logout-circle {
+  position: relative;
+  display: flex;
+  align-items: center; /* Center icon inside the circle */
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #0f4c9c, #1e1e1e);
+  border: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Logout Button Hover Effects */
+.choose-footer .user-info .logout-circle:hover {
+  background: radial-gradient(circle, #1e1e1e, #0f4c9c);
+  box-shadow: 0 8px 15px rgba(0, 123, 255, 0.4);
+  transform: scale(1.1); /* Slight zoom effect */
+}
+
+.choose-footer .user-info .logout-circle:active {
+  transform: scale(0.95); /* Press-down effect */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.choose-footer .user-info .logout-circle i {
+  font-size: 1.2rem; /* Icon size */
+  color: #61dafb; /* Light blue color for the icon */
+  transition: color 0.3s ease;
+}
+
+.choose-footer .user-info .logout-circle:hover i {
+  color: #ffffff; /* Change icon color on hover */
+}
+
+/* Tooltip for Logout Button */
+.choose-footer .user-info .logout-circle:hover::after {
+  content: "Logout";
+  position: absolute;
+  top: -35px; /* Position tooltip above the button */
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1e1e1e;
+  color: #ffffff;
+  font-size: 0.8rem;
+  padding: 5px 10px;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  white-space: nowrap;
+  z-index: 10;
+}
+
+/* Dropdown Menu Styles (if needed in the future) */
+.choose-footer .user-info ul {
+  display: none;
+  position: absolute;
+  background: #1e1e1e;
+  padding: 10px;
+  list-style: none;
+  border-radius: 5px;
+  margin-top: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.choose-footer .user-info:hover ul {
+  display: block;
+}
+
+.choose-footer .user-info ul li {
+  color: white;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.choose-footer .user-info ul li:hover {
+  background: #444;
+}
+
+
+
+
 
 
