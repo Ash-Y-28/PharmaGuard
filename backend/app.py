@@ -227,7 +227,7 @@ def login():
             algorithm="HS256"
         )
 
-        return jsonify({'message': 'Login successful', 'token': token}), 200
+        return jsonify({'message': 'Login successful', 'token': token, 'username': username}), 200
     except Exception as e:
         print("Error in /login:", str(e))
         return jsonify({'error': 'Failed to login'}), 500

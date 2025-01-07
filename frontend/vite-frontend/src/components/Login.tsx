@@ -28,9 +28,12 @@ const Login: React.FC = () => {
 
       if (response.status === 200) {
         const token = response.data.token;
+        const username = response.data.username;
 
         // Store the JWT in sessionStorage
         window.sessionStorage.setItem("jwt_token", token);
+        window.sessionStorage.setItem("username", username);
+        
 
         // Navigate to choose_resource
         navigate("/choose_resource");
@@ -66,6 +69,7 @@ const Login: React.FC = () => {
 
         // Store the JWT in sessionStorage
         window.sessionStorage.setItem("jwt_token", token);
+        window.sessionStorage.setItem("username", "Guest");
 
         // Navigate to choose_resource
         navigate("/choose_resource");
