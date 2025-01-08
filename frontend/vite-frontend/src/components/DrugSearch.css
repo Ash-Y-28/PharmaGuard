@@ -1,0 +1,78 @@
+/* ===============================================
+   STANFORD RESULTS LAYOUT
+   =============================================== */
+   .stanford-results-container {
+    display: grid;
+    /* Three columns on desktop, stack on mobile using minmax/breakpoints */
+    grid-template-columns: 1fr 1fr 1fr; 
+    gap: 3rem;
+    margin-top: 3rem;
+    width: 100%;
+    align-items: start;
+  }
+  
+  /* Each category column styling */
+  .category-column {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 1rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* If you want distinct border colors for each category: */
+  .unlikely-column {
+    border-top: 4px solid #00c853; /* Green accent for "Unlikely" */
+  }
+  .likely-column {
+    border-top: 4px solid #ffa000; /* Orange accent for "Likely" */
+  }
+  .most-likely-column {
+    border-top: 4px solid #ff1744; /* Red accent for "Most Likely" */
+  }
+  
+  /* Headings inside each column */
+  .category-column h2 {
+    margin-top: 0;
+    font-size: 1.8rem;
+    text-transform: uppercase;
+  }
+  
+  /* Cards for each drug combination */
+  .drug-card {
+    background-color: #1f1f1f;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    padding: 1.5rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+  }
+  .drug-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Drug combination title */
+  .drug-card h3 {
+    margin: 0 0 0.5rem;
+    color: #61dafb; /* React-like blue or any accent color you love */
+    font-size: 1.2rem;
+  }
+  
+  /* Event List */
+  .drug-card ul {
+    margin: 0;
+    padding-left: 1.2rem;
+    list-style-type: disc;
+  }
+  .drug-card li {
+    color: #ccc;
+    margin-bottom: 0.25rem;
+  }
+  
+  /* Media Query for Mobile (optional) */
+  @media (max-width: 768px) {
+    /* You might want to stack columns or reduce gap */
+    .stanford-results-container {
+      grid-template-columns: 1fr;
+    }
+  }
