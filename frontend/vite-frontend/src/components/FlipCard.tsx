@@ -1,43 +1,66 @@
 import React, { useState } from "react";
-import "./FlipCard.css";
+import "./DrugSearch.css";
 
 interface FlipCardProps {
-  category: string;         // e.g. "Unlikely", "Likely", "Most Likely"
-  drugCombination: string;  // e.g. "calcium + aspirin"
-  events: string[];         // Array of event names
+  category: string;         
+  drugCombination: string;  
+  events: { event: string; severity: string }[]; 
+  severity?: string;         
 }
 
-const FlipCard: React.FC<FlipCardProps> = ({
-  category,
-  drugCombination,
-  events,
-}) => {
+const FlipCard: React.FC<FlipCardProps> = ({ category, drugCombination, events, severity }) => {
   const [isFlipped, setIsFlipped] = useState(false);
 
   const handleClick = () => {
     setIsFlipped((prev) => !prev);
   };
 
+  const getSeverityColor = () => {
+    switch (severity?.toLowerCase()) {
+      case "low":
+        return "green";
+      case "medium":
+        return "orange";
+      case "high":
+        return "red";
+      default:
+        return "gray";
+    }
+  };
+
   return (
-    <div className={`flip-card ${isFlipped ? "flipped" : ""}`} onClick={handleClick}>
+    <div
+      className={`flip-card ${isFlipped ? "flipped" : ""}`}
+      onClick={handleClick}
+      style={{ borderColor: getSeverityColor(), borderWidth: "2px", borderStyle: "solid" }}
+    >
       <div className="flip-card-inner">
-        
-        {/* Front side */}
         <div className="flip-card-front">
           <h2>{category}</h2>
           <p>{drugCombination}</p>
           <p style={{ fontSize: "0.9rem" }}>Click to see events</p>
         </div>
 
-        {/* Back side */}
         <div className="flip-card-back">
-          <h2>{category} Events</h2>
-          <p>{drugCombination}</p>
+          <h2>
+            {category} Events
+            <span
+              style={{
+                fontSize: "0.8rem",
+                marginLeft: "10px",
+                color: getSeverityColor(),
+              }}
+            >
+              ({severity?.toUpperCase()})
+            </span>
+          </h2>
           <div className="events-container">
             {events && events.length > 0 ? (
               <ul>
                 {events.map((ev, i) => (
-                  <li key={i}>{ev}</li>
+                  <li key={i} style={{ color: getSeverityColor() }}>
+                    {ev.event}
+                  </li>
                 ))}
               </ul>
             ) : (
@@ -45,7 +68,6 @@ const FlipCard: React.FC<FlipCardProps> = ({
             )}
           </div>
         </div>
-
       </div>
     </div>
   );

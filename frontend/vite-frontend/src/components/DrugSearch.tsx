@@ -25,7 +25,6 @@ const DrugSearch: React.FC = () => {
       let url = "";
 
       if (selectedResource === "Stanford Drug Database") {
-        // Validate we have both drug1 and drug2
         if (!drug1.trim() || !drug2.trim()) {
           setError("Please enter both Drug 1 and Drug 2.");
           return;
@@ -57,20 +56,21 @@ const DrugSearch: React.FC = () => {
     }
   };
 
-  // Helper to combine multiple combos in a category into one array of events
-  const collectEvents = (categoryObj: any): string[] => {
+  const collectEventsWithSeverity = (categoryObj: any): { event: string; severity: string }[] => {
     if (!categoryObj || Object.keys(categoryObj).length === 0) {
       return [];
     }
 
-    let allEvents: string[] = [];
-    Object.values(categoryObj).forEach((eventString) => {
-      const splitted = (eventString as string).split(",").map((e) => e.trim());
-      allEvents = [...allEvents, ...splitted];
+    let allEvents: { event: string; severity: string }[] = [];
+    Object.entries(categoryObj).forEach(([, details]: any) => {
+      const events = details.events.split(",").map((e: string) => e.trim());
+      const severity = details.severity;
+
+      events.forEach((event: string) => {
+        allEvents.push({ event, severity });
+      });
     });
 
-    // Remove duplicates
-    allEvents = Array.from(new Set(allEvents));
     return allEvents;
   };
 
@@ -78,7 +78,6 @@ const DrugSearch: React.FC = () => {
     <div style={{ padding: "20px" }}>
       <h1>Drug Interaction Search</h1>
 
-      {/* Inputs for Stanford vs. FDA */}
       {selectedResource === "Stanford Drug Database" && (
         <div style={{ marginBottom: "1rem" }}>
           <label style={{ marginRight: "0.5rem" }}>Drug 1:</label>
@@ -89,7 +88,6 @@ const DrugSearch: React.FC = () => {
             placeholder="Enter first drug"
             style={{ marginRight: "1rem" }}
           />
-
           <label style={{ marginRight: "0.5rem" }}>Drug 2:</label>
           <input
             type="text"
@@ -114,62 +112,52 @@ const DrugSearch: React.FC = () => {
 
       <button onClick={handleSearch}>Search</button>
 
-      {/* Display error messages */}
       {error && <p style={{ color: "red", marginTop: "1rem" }}>{error}</p>}
 
-      {/* ------------------ STANFORD RESULTS (two-drug) ------------------ */}
       {results && selectedResource === "Stanford Drug Database" && !results.ai_fallback && (
         <div className="stanford-results-container" style={{ display: "flex", gap: "1rem" }}>
-          {/* Flip Card for UNLIKELY */}
           <FlipCard
             category="Unlikely"
             drugCombination={`${drug1} + ${drug2}`}
-            events={collectEvents(results.unlikely)}
+            events={collectEventsWithSeverity(results.unlikely)}
+            severity="low"
           />
-
-          {/* Flip Card for LIKELY */}
           <FlipCard
             category="Likely"
             drugCombination={`${drug1} + ${drug2}`}
-            events={collectEvents(results.likely)}
+            events={collectEventsWithSeverity(results.likely)}
+            severity="medium"
           />
-
-          {/* Flip Card for MOST LIKELY */}
           <FlipCard
             category="Most Likely"
             drugCombination={`${drug1} + ${drug2}`}
-            events={collectEvents(results.most_likely)}
+            events={collectEventsWithSeverity(results.most_likely)}
+            severity="high"
           />
         </div>
       )}
 
-      {/* ------------------ AI FALLBACK RESULTS ------------------ */}
       {results && results.ai_fallback && (
-        <div className="ai-fallback-container" style={{ display: "flex", gap: "1rem" }}>
-          {/* Card explaining AI fallback */}
+        <div className="ai-fallback-container" style={{ display: "flex", gap: "1rem", marginTop: "2rem" }}>
           <FlipCard
             category="AI Explanation"
             drugCombination=""
             events={[
-              "Unfortunately, the database does not have information about these drugs.",
-              "Let’s see what Doctor AI has to say about these drugs taken together."
+              { event: results.text_summary || "No summary available.", severity: "low" },
+              { event: results.disclaimer || "AI disclaimer not available.", severity: "low" },
             ]}
+            severity="low"
           />
-
-          {/* Card for AI-generated 'most likely' events */}
           <FlipCard
             category="Most Likely (AI)"
-            drugCombination={`${drug1} + ${drug2}`}
-            events={results.data?.most_likely || ["No events found."]}
+            drugCombination=""
+            events={
+              results.data?.most_likely?.map((event: string) => ({ event, severity: "high" })) || [
+                { event: "No events found.", severity: "low" },
+              ]
+            }
+            severity="high"
           />
-        </div>
-      )}
-
-      {/* ------------------ FDA RESULTS (single-drug) ------------------ */}
-      {results && selectedResource === "FDA API" && (
-        <div style={{ marginTop: "2rem" }}>
-          <h2>FDA Results:</h2>
-          <pre>{JSON.stringify(results, null, 2)}</pre>
         </div>
       )}
     </div>

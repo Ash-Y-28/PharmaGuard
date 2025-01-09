@@ -373,12 +373,28 @@ def drug_interactions():
             'most_likely': {}
         }
 
-        # 6) Iterate through matching rows, categorize by PRR
+        # 6) Iterate through matching rows, categorize by PRR and severity
+        def assign_severity(prr, pvalue):
+            """
+            Assign severity level based on PRR and p-value.
+            """
+            if prr > 50 and pvalue < 0.01:
+                return "high"
+            elif prr > 20 and pvalue >= 0.01:
+                return "medium"
+            else:
+                return "low"
+
         for _, row in interactions.iterrows():
             prr = float(row.get('proportional_reporting_ratio', 0))
+            pvalue = float(row.get('pvalue', 1))  # Default pvalue to 1 if not present
             drug_combination = f"{row['drug1']} + {row['drug2']}"
             event = row['event_name']
 
+            # Determine severity
+            severity = assign_severity(prr, pvalue)
+
+            # Categorize based on PRR (existing logic)
             if prr < 5:
                 category = 'unlikely'
             elif 5 <= prr < 15:
@@ -387,21 +403,25 @@ def drug_interactions():
                 category = 'most_likely'
 
             if drug_combination not in categorized[category]:
-                categorized[category][drug_combination] = []
+                categorized[category][drug_combination] = {
+                    'events': [],
+                    'severity': severity
+                }
 
-            categorized[category][drug_combination].append(event)
+            categorized[category][drug_combination]['events'].append(event)
 
         # 7) Convert event lists to comma-separated strings
         for category in categorized:
             for combo in categorized[category]:
-                events_list = categorized[category][combo]
-                categorized[category][combo] = ', '.join(events_list)
+                events_list = categorized[category][combo]['events']
+                categorized[category][combo]['events'] = ', '.join(events_list)
 
         return jsonify(categorized), 200
 
     except Exception as e:
         print("Error processing drug interactions:", e)
         return jsonify({'error': 'Failed to process drug interactions'}), 500
+
 
 
 @app.route('/fda_interactions', methods=['GET'])

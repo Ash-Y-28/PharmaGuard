@@ -1,78 +1,181 @@
-/* ===============================================
-   STANFORD RESULTS LAYOUT
-   =============================================== */
-   .stanford-results-container {
-    display: grid;
-    /* Three columns on desktop, stack on mobile using minmax/breakpoints */
-    grid-template-columns: 1fr 1fr 1fr; 
-    gap: 3rem;
-    margin-top: 3rem;
-    width: 100%;
-    align-items: start;
-  }
-  
-  /* Each category column styling */
-  .category-column {
-    background-color: rgba(255, 255, 255, 0.05);
-    border-radius: 10px;
-    padding: 1rem;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  }
-  
-  /* If you want distinct border colors for each category: */
-  .unlikely-column {
-    border-top: 4px solid #00c853; /* Green accent for "Unlikely" */
-  }
-  .likely-column {
-    border-top: 4px solid #ffa000; /* Orange accent for "Likely" */
-  }
-  .most-likely-column {
-    border-top: 4px solid #ff1744; /* Red accent for "Most Likely" */
-  }
-  
-  /* Headings inside each column */
-  .category-column h2 {
-    margin-top: 0;
-    font-size: 1.8rem;
-    text-transform: uppercase;
-  }
-  
-  /* Cards for each drug combination */
-  .drug-card {
-    background-color: #1f1f1f;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-    padding: 1.5rem;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    cursor: pointer;
-  }
-  .drug-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-  }
-  
-  /* Drug combination title */
-  .drug-card h3 {
-    margin: 0 0 0.5rem;
-    color: #61dafb; /* React-like blue or any accent color you love */
-    font-size: 1.2rem;
-  }
-  
-  /* Event List */
-  .drug-card ul {
-    margin: 0;
-    padding-left: 1.2rem;
-    list-style-type: disc;
-  }
-  .drug-card li {
-    color: #ccc;
-    margin-bottom: 0.25rem;
-  }
-  
-  /* Media Query for Mobile (optional) */
-  @media (max-width: 768px) {
-    /* You might want to stack columns or reduce gap */
-    .stanford-results-container {
-      grid-template-columns: 1fr;
-    }
-  }
+/* General Page Styling */
+.drug-search-root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  color: #f8fafc;
+  font-family: "Inter", sans-serif;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Header Section */
+.drug-search-header {
+  margin-top: 40px;
+  text-align: center;
+}
+
+.drug-search-header h1 {
+  font-size: 2.5rem;
+  color: #61dafb; /* Matching the ChooseResource page's title color */
+  margin-bottom: 10px;
+  text-shadow: 0 4px 8px rgba(56, 189, 248, 0.6);
+}
+
+.drug-search-header p {
+  font-size: 1.2rem;
+  color: #94a3b8;
+  margin-top: 5px;
+}
+
+/* Search Container */
+.search-container {
+  display: flex;
+  gap: 15px;
+  margin: 20px 0;
+}
+
+.search-container input {
+  padding: 12px;
+  font-size: 1rem;
+  color: #f8fafc;
+  background-color: #1e293b;
+  border: 1px solid #94a3b8;
+  border-radius: 8px;
+  width: 250px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.search-container input::placeholder {
+  color: #64748b;
+}
+
+.search-container button {
+  padding: 12px 24px;
+  font-size: 1rem;
+  background-color: #38bdf8;
+  color: #f8fafc;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(56, 189, 248, 0.2);
+}
+
+.search-container button:hover {
+  background-color: #0284c7;
+  transform: scale(1.05);
+  box-shadow: 0 6px 12px rgba(56, 189, 248, 0.4);
+}
+
+/* Container for the cards */
+.stanford-results-container,
+.ai-fallback-container {
+  display: flex;
+  justify-content: center; /* Horizontally center the cards */
+  align-items: flex-start; /* Align items to the top */
+  gap: 3rem; /* Space between cards */
+  margin-top: 2rem; /* Add space between heading and cards */
+  flex-wrap: wrap; /* Ensure cards wrap for smaller screens */
+}
+
+.flip-card {
+  width: 350px;
+  height: 350px;
+  margin: 10px;
+  perspective: 1000px;
+  background: #1e1e1e;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.flip-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 8px 15px rgba(0, 123, 255, 0.7);
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.6s ease-in-out;
+}
+
+.flip-card.flipped .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front,
+.flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  backface-visibility: hidden;
+  padding: 10px;
+  text-align: center;
+}
+
+.flip-card-front {
+  background: #1e1e1e;
+  color: #ffffff;
+}
+
+.flip-card-back {
+  background: #1e1e1e;
+  color: #cfd9df;
+  transform: rotateY(180deg);
+  overflow: hidden; /* Ensures content doesn't spill outside */
+}
+
+.events-container {
+  max-height: 130px; /* Adjust height based on card size */
+  overflow-y: auto; /* Enables vertical scrolling */
+  width: 100%; /* Ensures container spans the card width */
+  padding: 10px;
+  display: flex; /* Enable flex for centering */
+  flex-direction: column; /* Align items in a column */
+  justify-content: center; /* Center content vertically */
+  align-items: center; /* Center content horizontally */
+  text-align: center; /* Ensure text is centered */
+  scrollbar-width: thin; /* For Firefox */
+  scrollbar-color: #888 #444; /* For Firefox */
+}
+
+.events-container::-webkit-scrollbar {
+  width: 6px; /* Chrome, Safari scrollbar width */
+}
+
+.events-container::-webkit-scrollbar-thumb {
+  background: #61dafb; /* Scrollbar thumb color */
+  border-radius: 3px; /* Rounded scrollbar */
+}
+
+.events-container::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Hover effect for scrollbar thumb */
+}
+
+/* Paragraph text */
+.flip-card p {
+  color: white;
+  font-size: 1rem;
+  margin: 0.5rem 0;
+  text-align: center;
+}
+
+.flip-card h2 {
+  font-size: 30px;
+  text-align: center;
+  margin-top: -30px;
+  color: #61dafb;
+}
