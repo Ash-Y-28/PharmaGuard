@@ -16,8 +16,11 @@ import datetime
 import os
 import openai
 import json
+from dotenv import load_dotenv
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
+load_dotenv()
+
+# TODO: Replace hardcoded API key with .env variable for production
 
 print("OpenAI key is:", openai.api_key[:5] + "****")
 
@@ -295,7 +298,7 @@ def drug_interactions():
             that may occur when these two drugs are taken together.
 
             Then categorize each significant interaction or adverse event you mention 
-            into one of these categories: 'Unlikely', 'Likely', or 'Most Likely'.
+            into one of these categories there should atleast be eight events: 'Most Likely'.
 
             Finally, provide only a JSON response with the following format:
             {{

@@ -21,7 +21,7 @@
 
 .drug-search-header h1 {
   font-size: 2.5rem;
-  color: #61dafb; /* Matching the ChooseResource page's title color */
+  color: #61dafb;
   margin-bottom: 10px;
   text-shadow: 0 4px 8px rgba(56, 189, 248, 0.6);
 }
@@ -76,13 +76,14 @@
 .stanford-results-container,
 .ai-fallback-container {
   display: flex;
-  justify-content: center; /* Horizontally center the cards */
-  align-items: flex-start; /* Align items to the top */
-  gap: 3rem; /* Space between cards */
-  margin-top: 2rem; /* Add space between heading and cards */
-  flex-wrap: wrap; /* Ensure cards wrap for smaller screens */
+  justify-content: center;
+  align-items: flex-start;
+  gap: 3rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
 }
 
+/* Flip card styling */
 .flip-card {
   width: 350px;
   height: 350px;
@@ -90,15 +91,52 @@
   perspective: 1000px;
   background: #1e1e1e;
   border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7);
   overflow: hidden;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.flip-card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 8px 15px rgba(0, 123, 255, 0.7);
+.flip-card-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px; /* Space between icon and text */
+  margin-bottom: 1rem;
 }
+
+.flip-card-icon {
+  width: 24px; /* Icon size */
+  height: 24px;
+  object-fit: contain;
+}
+
+.flip-card:not(.flipped) {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7);
+}
+
+.flip-card:hover:not(.flipped) {
+  transform: translateY(-10px);
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.7);
+}
+
+.flip-card.flipped {
+  border: 2px solid transparent;
+}
+
+div.flip-card.flipped[data-border="unlikely"]:hover {
+  border-color: green !important;
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.5), 0 0 20px rgba(0, 255, 0, 0.5) !important;
+}
+
+div.flip-card.flipped[data-border="likely"]:hover {
+  border-color: yellow !important;
+  box-shadow: 0 0 10px rgba(255, 255, 0, 0.5), 0 0 20px rgba(255, 255, 0, 0.5) !important;
+}
+
+div.flip-card.flipped[data-border="most-likely"]:hover {
+  border-color: red !important;
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.5), 0 0 20px rgba(255, 0, 0, 0.5) !important;
+}
+
 
 .flip-card-inner {
   position: relative;
@@ -112,6 +150,7 @@
   transform: rotateY(180deg);
 }
 
+/* Flip card content */
 .flip-card-front,
 .flip-card-back {
   position: absolute;
@@ -135,37 +174,74 @@
   background: #1e1e1e;
   color: #cfd9df;
   transform: rotateY(180deg);
-  overflow: hidden; /* Ensures content doesn't spill outside */
+  overflow: hidden;
 }
 
 .events-container {
-  max-height: 130px; /* Adjust height based on card size */
-  overflow-y: auto; /* Enables vertical scrolling */
-  width: 100%; /* Ensures container spans the card width */
-  padding: 10px;
-  display: flex; /* Enable flex for centering */
-  flex-direction: column; /* Align items in a column */
-  justify-content: center; /* Center content vertically */
-  align-items: center; /* Center content horizontally */
-  text-align: center; /* Ensure text is centered */
-  scrollbar-width: thin; /* For Firefox */
-  scrollbar-color: #888 #444; /* For Firefox */
+  max-height: 130px;
+  overflow-y: auto;
+  overflow-x: auto; /* Ensures horizontal scroll works properly */
+  padding: 10px; /* General padding inside the container */
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
+/* General scrollbar styling */
 .events-container::-webkit-scrollbar {
-  width: 6px; /* Chrome, Safari scrollbar width */
+  width: 6px; /* Vertical scrollbar width */
+  height: 5px; /* Horizontal scrollbar height */
 }
 
+/* Vertical scrollbar thumb */
 .events-container::-webkit-scrollbar-thumb {
-  background: #61dafb; /* Scrollbar thumb color */
-  border-radius: 3px; /* Rounded scrollbar */
+  background: #61dafb; /* Light blue thumb */
+  border-radius: 3px; /* Rounded thumb for smoother design */
+  transition: background 0.3s ease, transform 0.2s ease; /* Smooth hover transitions */
 }
 
+/* Hover effect for vertical scrollbar thumb */
 .events-container::-webkit-scrollbar-thumb:hover {
-  background: #555; /* Hover effect for scrollbar thumb */
+  background: rgba(255, 255, 255, 0.8); /* Change to white on hover for visibility */
+  transform: scale(1.2); /* Slight scaling effect for interaction */
 }
 
-/* Paragraph text */
+/* Scrollbar track styling */
+.events-container::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1); /* Subtle background */
+  border-radius: 3px; /* Rounded corners */
+}
+
+/* Horizontal scrollbar track styling */
+.events-container::-webkit-scrollbar-track:horizontal {
+  margin-left: 15px; /* Add margin to left side */
+  margin-right: 15px; /* Add margin to right side */
+}
+
+/* Horizontal scrollbar thumb styling */
+.events-container::-webkit-scrollbar-thumb:horizontal {
+  background: #61dafb; /* Consistent thumb color */
+  border-radius: 3px; /* Rounded corners */
+  transition: background 0.3s ease, transform 0.2s ease; /* Smooth hover transitions */
+}
+
+/* Hover effect for horizontal scrollbar thumb */
+.events-container::-webkit-scrollbar-thumb:horizontal:hover {
+  background: rgba(255, 255, 255, 0.8); /* Brighter thumb color */
+  transform: scale(1.1); /* Subtle hover scaling for interaction */
+}
+
+/* To reduce the horizontal scrollbar length */
+.events-container::-webkit-scrollbar-track:horizontal {
+  margin-left: 20px; /* More margin to shrink track length */
+  margin-right: 20px;
+}
+
+
+
 .flip-card p {
   color: white;
   font-size: 1rem;
@@ -179,3 +255,129 @@
   margin-top: -30px;
   color: #61dafb;
 }
+
+.flip-card-back h2 {
+  padding-left: 20px; /* Apply to all cards for uniformity */
+}
+
+/* Severity-specific classes */
+.severity-low {
+  color: rgba(0, 255, 0, 0.8);
+}
+
+.severity-medium {
+  border-color: yellow;
+  color: yellow;
+}
+
+.severity-high {
+  border-color: red;
+  color: red;
+}
+
+.severity-default {
+  border-color: gray;
+  color: gray;
+}
+
+/* Badge for severity */
+.severity-badge {
+  font-size: 0.8rem;
+  margin-left: 10px;
+}
+
+/* Flip-card instruction text */
+.flip-card-instruction {
+  font-size: 0.9rem;
+  color: white;
+}
+
+/* Event list item */
+.event-item {
+  outline: none;
+  list-style-type: none;
+  text-transform: capitalize;
+  transition: transform 0.3s ease, color 0.3s ease;
+  transform-origin: center;
+}
+
+/* Hover effect */
+.event-item:hover {
+  outline: none;
+  cursor: none;
+  position: relative;
+  transform: scale(1.2) translateZ(10px) rotateX(-5deg); /* Enlarges and slightly tilts forward */
+}
+
+
+.events-container {
+  perspective: 1000px; /* Adds depth perspective */
+}
+
+.event-item:focus {
+  outline: none; /* Removes the focus outline */
+}
+
+.event-item.severity-low {
+  color: rgba(0, 255, 0, 0.8);
+}
+
+.event-item.severity-medium {
+  color: yellow;
+}
+
+.event-item.severity-high {
+  color: red;
+}
+
+/* No events found */
+.no-events {
+  color: white;
+  font-size: 0.9rem;
+}
+
+.flip-card-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem; /* Add space between the text and the icon */
+  font-size: 1.7rem; /* Adjust font size as needed */
+  color: #61dafb; /* Ensure consistent color */
+}
+
+.flip-card-front h2{
+  font-size: 1.8rem;
+  width: 100%;
+}
+
+.category-icon {
+  margin-left: 0.5rem; /* Additional space to the right of the heading */
+  font-size: 1.7rem; /* Icon size slightly smaller for alignment */
+  color: #61dafb; /* Match the color with the heading */
+}
+
+/* Add this to DrugSearch.css */
+.flip-card-front p.drug-combination {
+  font-size: 1.2rem; /* Increase the font size */
+  font-weight: 500;  /* Add slight boldness for better readability */
+  text-transform: none; /* Prevent uppercase transformation */
+  color: #ffffff; /* Ensure a clear color */
+  margin-top: 0.5rem; /* Add spacing for better alignment */
+}
+
+.flip-card-front .flip-card-instruction{
+  margin-top: 70px;
+}
+
+.category-icon.unlikely {
+  color: rgba(0, 255, 0, 0.8);
+}
+
+.category-icon.likely {
+  color: yellow;
+}
+
+.category-icon.most-likely {
+  color: red; /* Red */
+}
+
