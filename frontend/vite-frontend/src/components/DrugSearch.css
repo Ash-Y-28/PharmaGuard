@@ -11,19 +11,78 @@
   font-family: "Inter", sans-serif;
   padding: 20px;
   box-sizing: border-box;
+  background: none;
+  margin-bottom: 70px;
 }
 
-/* Header Section */
+/* Style for the Heading */
 .drug-search-header {
-  margin-top: 40px;
+  color: #61dafb; /* Blue color for the heading */
+  text-shadow: 0 0 10px rgba(0, 123, 255, 0.8); /* Glow effect */
+  font-size: 3.5rem; /* Adjust size as needed */
+  font-weight: bold;
   text-align: center;
+  margin-bottom: 20px;
+  text-decoration: none !important;
+  border-bottom: none !important;
+  position: relative;
+  transform: translateY(-20px); /* Start slightly above */
+  animation: fadeSlideDown 1.5s ease-out forwards; /* Fade and slide down */
 }
 
+.drug-search-header::before,
+.drug-search-header::after {
+  content: none !important; /* Remove pseudo-elements */
+}
+
+/* Remove hover effect (if previously applied) */
+.drug-search-header:hover {
+  color: #61dafb; /* Keep the same blue color on hover */
+  text-shadow: 0 0 15px rgba(0, 123, 255, 1); /* Optional stronger glow on hover */
+  text-decoration: none !important;
+}
+
+/* Keyframes for Heading Animation */
+@keyframes fadeSlideDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Enhanced Title Styling */
 .drug-search-header h1 {
-  font-size: 2.5rem;
-  color: #61dafb;
-  margin-bottom: 10px;
-  text-shadow: 0 4px 8px rgba(56, 189, 248, 0.6);
+  font-size: 4rem !important;
+  font-weight: bold;
+  background: linear-gradient(90deg, #4fc3f7, #1de9b6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: center;
+  margin-bottom: 20px;
+  text-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+  animation: pulse 3s infinite;
+}
+
+/* Subtle Title Animation */
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    text-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+  }
+  50% {
+    transform: scale(1.05);
+    text-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
+  }
+}
+
+.drug-search-header h1:hover {
+  transform: scale(1.05);
+  text-shadow: 0 6px 15px rgba(0, 123, 255, 0.6);
 }
 
 .drug-search-header p {
@@ -32,44 +91,150 @@
   margin-top: 5px;
 }
 
-/* Search Container */
+.risk-indicator-text {
+  margin-top: 10px; /* Space from the heading */
+  width: 100%;
+  font-size: 23px; /* Adjust font size */
+  color: whitesmoke; /* Subtle text color for readability */
+  text-align: center; /* Center align the text */
+  line-height: 1.5; /* Improve readability */
+  transform: translateY(10px); /* Start slightly below */
+  animation: fadeIn 1s ease-in-out forwards; /* Apply the animation */
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Search Bar Container */
 .search-container {
   display: flex;
   gap: 15px;
-  margin: 20px 0;
+  margin: 30px 0;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  transition: opacity 1.5s ease, transform 1.5s ease;
 }
 
+.search-container.hide {
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+/* Input Fields */
 .search-container input {
   padding: 12px;
   font-size: 1rem;
   color: #f8fafc;
-  background-color: #1e293b;
-  border: 1px solid #94a3b8;
-  border-radius: 8px;
-  width: 250px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid transparent;
+  border-radius: 12px;
+  width: 300px;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
+.search-container input:focus {
+  outline: none;
+  border-color: #61dafb;
+  box-shadow: 0 0 10px rgba(97, 218, 251, 0.5);
+}
+
+/* Placeholder Styling */
 .search-container input::placeholder {
-  color: #64748b;
+  color: #94a3b8;
 }
 
+.search-icon-container {
+  font-size: 3rem;
+  color: #007bff;
+  cursor: pointer;
+  transition: transform 0.3s ease, color 0.3s ease;
+  text-align: center;
+  margin-top: 2rem;
+  animation: heartbeat 1.5s infinite, glow 1.5s infinite;
+}
+
+/* Heartbeat Animation */
+@keyframes heartbeat {
+  0% {
+    transform: scale(1);
+  }
+  30% {
+    transform: scale(1.2);
+  }
+  60% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Glow Animation */
+@keyframes glow {
+  0% {
+    text-shadow: 0 0 10px rgba(0, 123, 255, 0.8);
+  }
+  50% {
+    text-shadow: 0 0 20px rgba(0, 123, 255, 1);
+  }
+  100% {
+    text-shadow: 0 0 10px rgba(0, 123, 255, 0.8);
+  }
+}
+
+.search-icon-container:hover {
+  transform: scale(1.1);
+  color: #1de9b6;
+}
+
+.search-container {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+  animation: fadeIn 1.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Search Button */
 .search-container button {
   padding: 12px 24px;
   font-size: 1rem;
-  background-color: #38bdf8;
-  color: #f8fafc;
+  background: linear-gradient(90deg, #61dafb);
+  color: #ffffff;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 8px rgba(56, 189, 248, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 }
 
 .search-container button:hover {
-  background-color: #0284c7;
   transform: scale(1.05);
-  box-shadow: 0 6px 12px rgba(56, 189, 248, 0.4);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(90deg, #0056b3, #004085);
 }
 
 /* Container for the cards */
@@ -93,6 +258,19 @@
   border-radius: 12px;
   overflow: hidden;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: fadeSlideIn 1s ease-out forwards;
+}
+
+/* Keyframes for Card Animation */
+@keyframes fadeSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .flip-card-title {
@@ -380,4 +558,129 @@ div.flip-card.flipped[data-border="most-likely"]:hover {
 .category-icon.most-likely {
   color: red; /* Red */
 }
+
+/* Footer Section */
+.choose-footer {
+  text-align: center;
+  margin-top: 70px;
+  font-size: 0.9rem;
+  color: #aaa;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  width: 100%;
+}
+
+/* User Info Styling */
+.choose-footer .user-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  font-size: 1.2rem;
+  color: #61dafb;
+  cursor: pointer;
+}
+
+/* Logout Circle Button */
+.choose-footer .user-info .logout-circle {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #0f4c9c, #1e1e1e);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.choose-footer .user-info .logout-circle:hover {
+  background: radial-gradient(circle, #1e1e1e, #0f4c9c);
+  transform: scale(1.1);
+}
+
+.choose-footer .user-info .logout-circle:active {
+  transform: scale(0.95);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.choose-footer .user-info .logout-circle i {
+  font-size: 1.2rem;
+  color: #61dafb;
+}
+
+.loader {
+  animation: rotate 1s infinite;
+  height: 50px;
+  width: 50px;
+  position: relative;
+  margin: 20px auto; /* Center the loader */
+}
+
+.loader:before,
+.loader:after {
+  border-radius: 50%;
+  content: "";
+  display: block;
+  height: 20px;
+  width: 20px;
+}
+
+.loader:before {
+  animation: ball1 1s infinite;
+  background-color: #cb2025;
+  box-shadow: 30px 0 0 #f8b334;
+  margin-bottom: 10px;
+}
+
+.loader:after {
+  animation: ball2 1s infinite;
+  background-color: #00a096;
+  box-shadow: 30px 0 0 #97bf0d;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg) scale(0.8);
+  }
+  50% {
+    transform: rotate(360deg) scale(1.2);
+  }
+  100% {
+    transform: rotate(720deg) scale(0.8);
+  }
+}
+
+@keyframes ball1 {
+  0% {
+    box-shadow: 30px 0 0 #f8b334;
+  }
+  50% {
+    box-shadow: 0 0 0 #f8b334;
+    margin-bottom: 0;
+    transform: translate(15px, 15px);
+  }
+  100% {
+    box-shadow: 30px 0 0 #f8b334;
+    margin-bottom: 10px;
+  }
+}
+
+@keyframes ball2 {
+  0% {
+    box-shadow: 30px 0 0 #97bf0d;
+  }
+  50% {
+    box-shadow: 0 0 0 #97bf0d;
+    margin-top: -20px;
+    transform: translate(15px, 15px);
+  }
+  100% {
+    box-shadow: 30px 0 0 #97bf0d;
+    margin-top: 0;
+  }
+}
+
+
 
