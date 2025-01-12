@@ -13,6 +13,7 @@ const DrugSearch: React.FC = () => {
   const [username, setUsername] = useState<string | null>("Guest");
   const [isLoading, setIsLoading] = useState(false);
 
+
   useEffect(() => {
     const user = sessionStorage.getItem("username");
     setUsername(user ? user : "Guest");
@@ -183,17 +184,19 @@ const DrugSearch: React.FC = () => {
             category="AI Explanation"
             drugCombination=""
             events={[
-              { event: results.text_summary || "No summary available.", severity: "low" },
+              { event: (results.text_summary || "No summary available.").replace(/```Json/gi, "").trim(), severity: "low" },
               { event: results.disclaimer || "AI disclaimer not available.", severity: "low" },
+              
             ]}
+            className="ai-explanation-card ai-brain-card"
             severity="low"
           />
           <FlipCard
-            category="Most Likely (AI)"
+            category="Most Likely"
             drugCombination=""
             events={
               results.data?.most_likely?.map((event: string) => ({ event, severity: "high" })) || [
-                { event: "No events found.", severity: "low" },
+          { event: "No events found.", severity: "low" },
               ]
             }
             severity="high"

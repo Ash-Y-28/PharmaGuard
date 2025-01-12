@@ -294,6 +294,11 @@ def drug_interactions():
             # Instead of just returning "No interactions found," call OpenAI
             prompt_text = f"""
             I have two drugs: {drug1} and {drug2}.
+
+            First, validate if both are actual drug names. 
+
+            If you dont find either of the drug names valid you dont have to provide any response or events whatsoever.
+
             Please discuss any potential interactions, side effects, or warnings 
             that may occur when these two drugs are taken together.
 

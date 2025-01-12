@@ -5,10 +5,11 @@ interface FlipCardProps {
   category: string;         
   drugCombination: string;  
   events: { event: string; severity: string }[]; 
-  severity?: string;         
+  severity?: string;       
+  className?: string; // Add this line  
 }
 
-const FlipCard: React.FC<FlipCardProps> = ({ category, drugCombination, events, severity }) => {
+const FlipCard: React.FC<FlipCardProps> = ({ category, drugCombination, events, severity, className }) => {
   const [isFlipped, setIsFlipped] = useState(false);
 
   useEffect(() => {
@@ -43,6 +44,8 @@ const FlipCard: React.FC<FlipCardProps> = ({ category, drugCombination, events, 
         return "fas fa-balance-scale"; // Font Awesome Exclamation Circle
       case "most likely":
         return "fas fa-ambulance"; // Font Awesome Thumbs Down
+      case "ai explanation": // Add this case
+        return "fas fa-robot"; // Brain icon
       default:
         return ""; // Fallback
     }
@@ -61,7 +64,9 @@ const FlipCard: React.FC<FlipCardProps> = ({ category, drugCombination, events, 
 
   return (
     <div
-      className={`flip-card ${isFlipped ? "flipped" : ""} ${getSeverityClass()} ${isFlipped ? "flipped-shadow" : ""}`}
+    className={`flip-card ${isFlipped ? "flipped" : ""} ${getSeverityClass()} ${
+      isFlipped ? "flipped-shadow" : ""
+    } ${className || ""}`}
       data-border={category.toLowerCase().replace(" ", "-")}
       onClick={handleClick}
     >

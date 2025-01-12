@@ -682,5 +682,67 @@ div.flip-card.flipped[data-border="most-likely"]:hover {
   }
 }
 
+/* Completely remove hover effects for AI Explanation card's flip-card-back paragraphs */
+.ai-fallback-container .ai-explanation-card .flip-card-back p {
+  pointer-events: none !important;
+  transform: none !important;
+  transition: none !important;
+  opacity: 1 !important;
+  position: static !important;
+  text-shadow: none !important;
+  color: white;
+}
 
+/* Disable hover effect for the entire AI Explanation card */
+.ai-fallback-container .ai-explanation-card:hover {
+  transform: none !important; /* Prevent hover transform */
+  box-shadow: none !important; /* Prevent shadow on hover */
+}
 
+/* Ensure .event-item in AI Explanation does not scale or hover */
+.ai-fallback-container .ai-explanation-card .event-item:hover {
+  transform: none !important;
+  cursor: default !important;
+  position: static !important;
+}
+
+.ai-fallback-container .ai-explanation-card .severity-low{
+  color: white;
+}
+
+.ai-fallback-container .ai-explanation-card .severity-badge {
+  display: none;
+}
+
+/* Add spacing below the caution text only */
+.ai-fallback-container .ai-explanation-card .severity-low:last-child {
+  margin-top: 20px; /* Adjust the spacing value as needed */
+  text-shadow: white,
+               white, 
+               white;
+  color: white; /* Slightly brighter red for better visibility */
+  font-weight: bold; /* Make it stand out */
+  animation: glowEffect 2s infinite alternate; /* Smooth pulsating glow */
+}
+
+/* Keyframe for the glowing animation */
+@keyframes glowEffect {
+  0% {
+    text-shadow: white,
+                 white,
+                 white;
+  }
+  100% {
+    text-shadow: white,
+                 white,
+                 white;
+  }
+}
+
+.category-icon.ai-explanation {
+  color: #61dafb; /* Light blue color */
+  font-size: 1.8rem; /* Adjust size */
+  position: relative;
+  top: -2px;
+
+}
