@@ -302,20 +302,20 @@ def drug_interactions():
             Please discuss any potential interactions, side effects, or warnings 
             that may occur when these two drugs are taken together.
 
+
             Then categorize each significant interaction or adverse event you mention 
             into one of these categories there should atleast be eight events: 'Most Likely'.
 
-            Finally, provide only a JSON response with the following format:
+            Finally, provide only a JSON response with the following format but do not state it anywhere saying anything like 'Here is the JSON response':
             {{
               "most_likely": ["event1", "event2", "event3", "event4", "event5"]
             }}
 
-            Before the JSON, provide a brief text summary explaining the interactions in detail.
             """
 
             try:
                 response = openai.chat.completions.create(
-                    model="gpt-3.5-turbo",
+                    model="gpt-4",
                     messages=[
                         {
                             "role": "system",
@@ -326,22 +326,27 @@ def drug_interactions():
                             "content": prompt_text
                         }
                     ],
-                    max_tokens=2000,
+                    max_tokens=1000,
                     temperature=0.7
                 )
 
                 content = response.choices[0].message.content
 
+                # Remove any lines containing the word "JSON"
+                cleaned_content = "\n".join(
+                    [line for line in content.splitlines() if "JSON" not in line]
+                    ).strip()
+
                 # Debug: Print raw AI response
                 print("Raw AI Response:", content)
 
                 # Attempt to extract JSON using regex
-                json_match = re.search(r'{.*}', content, re.DOTALL)
+                json_match = re.search(r'{.*}', cleaned_content, re.DOTALL)
                 if json_match:
                     # Extract JSON
                     json_data = json.loads(json_match.group(0))
                     # Extract text before JSON
-                    text_summary = content[:json_match.start()].strip()
+                    text_summary = cleaned_content[:json_match.start()].strip()
                 else:
                     raise ValueError("No JSON found in the response.")
 

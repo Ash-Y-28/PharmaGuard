@@ -184,7 +184,13 @@ const DrugSearch: React.FC = () => {
             category="AI Explanation"
             drugCombination=""
             events={[
-              { event: (results.text_summary || "No summary available.").replace(/```Json/gi, "").trim(), severity: "low" },
+              { event: (results.text_summary || "No summary available.")
+                .replace(/Here Is The JSON Format Of The Significant Interactions:/gi, "")
+                .replace(/Here Is The Formatted JSON Response:/gi,"")
+                .replace(/```Json/gi, "")
+                .replace(/```/gi,"")
+                .trim(), 
+                severity: "low" },
               { event: results.disclaimer || "AI disclaimer not available.", severity: "low" },
               
             ]}
