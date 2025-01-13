@@ -746,3 +746,83 @@ div.flip-card.flipped[data-border="most-likely"]:hover {
   top: -2px;
 
 }
+
+.fda-card {
+  border: 2px solid #007bff;
+  background: linear-gradient(to bottom, #eaf4ff, #d0e8ff);
+}
+
+.fda-card.flipped {
+  transform: scale(1.1) rotateY(180deg);
+}
+
+.fda-card .flip-card-back {
+  overflow-y: auto;
+  max-height: 400px; /* Ensure scrolling for long content */
+}
+
+.fda-card .flip-card-front {
+  text-align: center;
+  font-weight: bold;
+}
+
+/* FDA Results Wrapper */
+.fda-results-wrapper {
+  width: 100%; /* Full-width wrapper for FDA results */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 30px; /* Space below search bar */
+  background-color: #0f172a; /* Optional background for clarity */
+  padding: 20px;
+  box-sizing: border-box;
+  border-radius: 10px;
+}
+
+/* Header for FDA Results */
+.fda-results-heading {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #61dafb; /* Match with other FDA elements */
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Scrollable Container for FDA Flip Cards */
+.fda-results-container {
+  width: 90%; /* Adjust width as needed */
+  max-height: 500px; /* Constrain height to enable scrolling */
+  overflow-x: auto; /* Horizontal scrolling for overflow */
+  overflow-y: auto; /* Vertical scrolling for overflow */
+  display: flex;
+  flex-wrap: wrap; /* Wrap cards */
+  justify-content: center;
+  gap: 15px; /* Space between cards */
+  padding: 10px;
+  border: 1px solid #3b82f6; /* Optional border for better visibility */
+  background-color: #1e293b; /* Darker background for better contrast */
+  border-radius: 10px;
+}
+
+/* Optional: Style the scrollbars for FDA cards */
+.fda-results-container::-webkit-scrollbar {
+  width: 8px; /* Scrollbar width */
+  height: 8px; /* Scrollbar height */
+}
+
+.fda-results-container::-webkit-scrollbar-thumb {
+  background: #61dafb; /* Thumb color */
+  border-radius: 4px; /* Rounded edges */
+}
+
+.fda-results-container::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1); /* Subtle track background */
+}
+
+.fda-margin-top {
+  margin-top: 100px; /* Adjust value as needed */
+}
+
+.fda-search-icon-wrapper {
+  margin-bottom: 30px; /* Apply spacing here */
+}

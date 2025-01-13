@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./DrugSearch.css"; // Keep your existing styles here
 import FlipCard from "./FlipCard"; // Import the FlipCard component
+import FDAFlipCards from "./FDAFlipCards";
 
 const DrugSearch: React.FC = () => {
   const [drug1, setDrug1] = useState("");
@@ -12,7 +13,6 @@ const DrugSearch: React.FC = () => {
   const [isHiding, setIsHiding] = useState(false); // For smooth disappearance
   const [username, setUsername] = useState<string | null>("Guest");
   const [isLoading, setIsLoading] = useState(false);
-
 
   useEffect(() => {
     const user = sessionStorage.getItem("username");
@@ -60,6 +60,10 @@ const DrugSearch: React.FC = () => {
       console.log("API Response:", data);
 
       if (response.ok) {
+        if (selectedResource === "FDA API" && (!data || (Array.isArray(data) && data.length === 0))) {
+          setError("No drug found for the given name.");
+          setResults(null);
+        }else{
         setResults(data);
 
         // Smoothly hide the search bar
@@ -68,6 +72,7 @@ const DrugSearch: React.FC = () => {
           setIsHiding(false);
           setShowSearchBars(false);
         }, 500); // Match the duration of the CSS transition
+        }
       } else {
         setError(data.error || "Failed to fetch drug interactions.");
       }
@@ -102,17 +107,38 @@ const DrugSearch: React.FC = () => {
   };
 
   return (
-    <div className="drug-search-root">
-      <h1 className="drug-search-header">Drug Interaction Search</h1>
-      <p className="risk-indicator-text">
-      Event colors highlight risk: green for low occurrence, yellow for moderate, and red for high likelihood based on reports.
-      </p>
-
-      {!showSearchBars && (
-        <div className="search-icon-container" onClick={handleSearchIconClick}>
-          🔍
-        </div>
-      )}
+    <div
+        className={`drug-search-root ${
+          selectedResource === "FDA API" ? "fda-margin-top" : ""
+        }`}
+>
+      <h1 className="drug-search-header">
+        {selectedResource === "Stanford Drug Database"
+        ? "Drug Interaction Search"
+        : selectedResource === "FDA API"
+        ? "Drug Information Search"
+        : "Drug Search"}
+     </h1>
+     <p className="risk-indicator-text">
+      {selectedResource === "Stanford Drug Database"
+      ? "Event colors highlight risk: green for low occurrence, yellow for moderate, and red for high likelihood based on reports."
+      : selectedResource === "FDA API"
+      ? "Explore detailed drug information as provided by the FDA, designed for advanced medical professionals seeking comprehensive insights into medications and their clinical implications."
+      : ""}
+    </p>
+      
+    {!showSearchBars && (
+  <div className="fda-search-icon-wrapper">
+    <div
+      className={`search-icon-container ${
+        selectedResource === "FDA API" ? "fda-search-icon" : ""
+      }`}
+      onClick={handleSearchIconClick}
+    >
+      🔍
+    </div>
+  </div>
+)}
 
       {showSearchBars && (
         <div className={`search-container ${isHiding ? "hide" : ""}`}>
@@ -147,18 +173,12 @@ const DrugSearch: React.FC = () => {
             </>
           )}
 
+
           <button onClick={handleSearch}>Search</button>
         </div>
       )}
 
-      {isLoading && (
-        <div className="loader-container">
-          <div className="loader"></div>
-        </div>
-      )}
-
-      {error && <p style={{ color: "red", marginTop: "1rem" }}>{error}</p>}
-
+      {/* Stanford Results */}
       {results && selectedResource === "Stanford Drug Database" && !results.ai_fallback && (
         <div className="stanford-results-container">
           {["unlikely", "likely", "most_likely"].map((category, index) => (
@@ -178,6 +198,29 @@ const DrugSearch: React.FC = () => {
         </div>
       )}
 
+{/* FDA Results */}
+{/* FDA Results */}
+{/* FDA Results */}
+{/* FDA Results */}
+{results && selectedResource === "FDA API" && (
+    <div className="fda-results-container">
+      {Array.isArray(results) && results.length > 0 ? (
+        <FDAFlipCards results={results} />
+      ) : (
+        <p>No drug information available for the given name.</p>
+      )}
+    </div>
+)}
+
+
+      {isLoading && (
+        <div className="loader-container">
+          <div className="loader"></div>
+        </div>
+      )}
+
+      {error && <p style={{ color: "red", marginTop: "1rem" }}>{error}</p>}
+
       {results && results.ai_fallback && (
         <div className="ai-fallback-container">
           <FlipCard
@@ -186,13 +229,12 @@ const DrugSearch: React.FC = () => {
             events={[
               { event: (results.text_summary || "No summary available.")
                 .replace(/Here Is The JSON Format Of The Significant Interactions:/gi, "")
-                .replace(/Here Is The Formatted JSON Response:/gi,"")
+                .replace(/Here Is The Formatted JSON Response:/gi, "")
                 .replace(/```Json/gi, "")
-                .replace(/```/gi,"")
-                .trim(), 
+                .replace(/```/gi, "")
+                .trim(),
                 severity: "low" },
               { event: results.disclaimer || "AI disclaimer not available.", severity: "low" },
-              
             ]}
             className="ai-explanation-card ai-brain-card"
             severity="low"
@@ -202,7 +244,7 @@ const DrugSearch: React.FC = () => {
             drugCombination=""
             events={
               results.data?.most_likely?.map((event: string) => ({ event, severity: "high" })) || [
-          { event: "No events found.", severity: "low" },
+                { event: "No events found.", severity: "low" },
               ]
             }
             severity="high"
