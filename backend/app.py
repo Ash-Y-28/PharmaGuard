@@ -20,9 +20,10 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# TODO: Replace hardcoded API key with .env variable for production
+for key, value in os.environ.items():
+    if "OPENAI" in key:
+        print(type(value))
 
-print("OpenAI key is:", openai.api_key[:5] + "****")
 
 def generate_otp():
     return str(random.randint(100000, 999999))
@@ -85,7 +86,9 @@ warnings.filterwarnings("ignore", category=UserWarning, module="werkzeug")
 
 app = Flask(__name__, template_folder='../frontend/templates', static_folder='../frontend/static')
 
-app.config['SECRET_KEY'] = "15f396b86a416e88b49d40ad6805be6510312cc0c1ac04c1244cc75bc0c26aa3"
+app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
+
+
 
 CORS(app)
 
@@ -144,6 +147,7 @@ def check_email():
 
 @app.route('/register', methods=['POST'])
 def register():
+    SECRET_KEY = os.getenv("SECRET_KEY")
     try:
         data = request.json
         username = data.get('username')
@@ -232,7 +236,7 @@ def login():
 
         # Generate a JWT token for the user
         token = jwt.encode(
-            {'username': username, 'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1)},
+            {'username': username, 'exp': datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=1)},
             app.config['SECRET_KEY'],
             algorithm="HS256"
         )
@@ -245,9 +249,11 @@ def login():
 @app.route('/guest_login', methods=['POST'])
 def guest_login():
     try:
+        print("SECRET_KEY:", app.config['SECRET_KEY'])  # Debugging the key
+        print("Username: guest")  # Debugging the payload
         # Generate a guest token
         token = jwt.encode(
-            {'username': 'guest', 'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1)},
+            {'username': 'guest', 'exp': datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=1)},
             app.config['SECRET_KEY'],
             algorithm="HS256"
         )
@@ -259,8 +265,17 @@ def guest_login():
     
 import re
 
+
+openai.API_KEY = os.getenv("OPENAI_API_KEY").strip()
+
+openai.api_key = openai.API_KEY
+
 @app.route('/drug_interactions', methods=['GET'])
 def drug_interactions():
+
+    openai.API_KEY = os.getenv("OPENAI_API_KEY").encode("utf-8").decode("utf-8")
+    print("Loaded OpenAI API Key:", openai.API_KEY)
+    
     # 1) Retrieve drug1 and drug2 from query parameters
     drug1 = request.args.get('drug1', '').strip()
     drug2 = request.args.get('drug2', '').strip()
