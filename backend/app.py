@@ -20,10 +20,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-for key, value in os.environ.items():
-    if "OPENAI" in key:
-        print(type(value))
-
 
 def generate_otp():
     return str(random.randint(100000, 999999))
