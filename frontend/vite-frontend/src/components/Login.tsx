@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
+import GuardIcon from '../assets/security.png';
+import './Login.css'
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState("");
@@ -12,6 +14,13 @@ const Login: React.FC = () => {
   const [loading, setLoading] = useState(false); // Loading state for login
   const [guestLoading, setGuestLoading] = useState(false); // Loading state for guest login
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css";
+    document.head.appendChild(link);
+  }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -86,7 +95,10 @@ const Login: React.FC = () => {
       <div style={{ padding: "20px", maxWidth: "600px", margin: "0 auto", position: "relative", zIndex: 1 }}>
         {/* Header Section */}
         <div style={{ textAlign: "center", marginBottom: "20px" }}>
-          <h1 style={{ fontSize: "2.5rem", marginBottom: "10px" }}>PharmaGuard</h1>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <h1 style={{ fontSize: "2.5rem", marginBottom: "10px", marginRight: "10px" }}>PharmaGuard</h1>
+            <img src={GuardIcon} alt="PharmaGuard Icon" className="guard-icon-login" />
+            </div>
           <p
             style={{
               fontSize: "1.2rem",

@@ -4,9 +4,12 @@
     gap: 20px;
     justify-content: center;
     padding: 20px;
+    transition: transform 1.2s ease, opacity 1.2s ease;
+
   }
 
-.fda-header{
+
+  .fda-header{
   margin-top: 50px;
 }
 
@@ -19,14 +22,24 @@
     border-radius: 10px;
     overflow: hidden;
     cursor: pointer;
-    transition: transform 0.3s ease-in-out;
+    transform: scale(1); /* Default scale */
+    transition: transform 0.4s ease, opacity 0.4s ease; /* Smooth scaling and opacity transition */
+    opacity: 1; /* Default visibility */
   }
+
   
   .fda-flipcard.active {
     width: 1000px !important; /* Adjust the width for the expanded card */
-    height: 800px; /* Adjust the height for the expanded card */
+    height: 900px; /* Adjust the height for the expanded card */
     transform: scale(1.2);
     z-index: 10;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+  }
+
+  .fda-flipcard:not(.active) {
+    transform: scale(1); /* Reset to default scale when inactive */
+    opacity: 0.9; /* Slightly fade out inactive cards */
+    transition: transform 0.4s ease, opacity 0.4s ease; /* Smooth animation */
   }
   
   .fda-flipcard-front,
@@ -37,6 +50,7 @@
     align-items: center;
     padding: 10px;
     text-align: center;
+    transition: transform 1.6s ease; /* Smooth flip animation */
   }
   
   .fda-flipcard-back {
@@ -54,6 +68,7 @@
   
   .fda-flipcard-content p {
     margin: 10px 0;
+    transform: translateY(20px);
   }
   
   .fda-close-btn {
@@ -209,6 +224,7 @@
   font-weight: bold;
   color: #f3f4f6;
   text-align: center;
+  position: relative;
 }
 
 /* Back Side of the Card */
@@ -256,3 +272,44 @@
   z-index: 99;
 }
 
+.fda-flipcard-back h3 {
+  display: block; /* Allow margins to take effect */
+  margin-top: -10px; /* Adjust top spacing */
+  min-height: 100px; /* Ensure a consistent minimum height */
+  display: flex; /* Flexbox for vertical alignment */
+  flex-direction: column; /* Align elements vertically */
+  justify-content: center; /* Center align vertically */
+  align-items: center; /* Center align horizontally */
+  text-align: center; /* Center align text */
+  border: none;
+  outline: none;
+  box-shadow: none;
+  padding: 0;
+  font-size: 2rem;
+  color: #61dafb;
+
+}
+
+.fda-flipcard-content p {
+  margin-top: -40px;
+  font-size: 1.4rem;
+  color: whitesmoke;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fda-flipcard p {
+  color: white;
+  font-size: 1.3rem;
+  color: white; /* Change text color to white */
+  text-shadow: 0px 0px 2px rgba(255, 255, 255, 0.6); 
+}

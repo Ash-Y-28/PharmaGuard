@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "./FDAFlipCards.css";
 
 interface FDAFlipCardsProps {
@@ -7,6 +7,7 @@ interface FDAFlipCardsProps {
 
 const FDAFlipCards: React.FC<FDAFlipCardsProps> = ({ results }) => {
   const [activeCard, setActiveCard] = useState<number | null>(null);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   // Map to customize specific card titles
   const customCardTitles: { [key: string]: string } = {
@@ -17,8 +18,13 @@ const FDAFlipCards: React.FC<FDAFlipCardsProps> = ({ results }) => {
     Do_not_use: "Do Not Use",
     Description: "Drug Description",
     
-    // Add more custom mappings as needed
   };
+
+  useEffect(() => {
+    if (activeCard !== null && cardRefs.current[activeCard]) {
+      cardRefs.current[activeCard]?.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
+    }
+  }, [activeCard]);
 
   const handleCardClick = (index: number) => {
     setActiveCard(index === activeCard ? null : index); // Toggle active state
@@ -38,29 +44,24 @@ const FDAFlipCards: React.FC<FDAFlipCardsProps> = ({ results }) => {
         <div
           key={index}
           className={`fda-flipcard ${activeCard === index ? "active" : ""}`}
-          onClick={() => handleCardClick(index)}
+          onClick={(e) => {
+            e.stopPropagation(); // Prevent unwanted bubbling
+            handleCardClick(index);
+          }}
+          ref={(el) => (cardRefs.current[index] = el)} // Attach ref to each card
         >
           <div className="fda-flipcard-front">
-            <h3>Card {index + 1}</h3>
-            <p>{formatCardTitle(key)}</p>
+            <p>{formatCardTitle(key)}</p> {/* Front card title formatting */}
           </div>
 
           {/* Only display the back if this card is active */}
           {activeCard === index && (
-            <div className="fda-flipcard-back">
-              <h3>{formatCardTitle(key)}</h3>
+            <div className="fda-flipcard-back" ref={(el) => (cardRefs.current[index] = el)} >
+              {/* Close button in the top-left corner */}
+              <h3>{formatCardTitle(key)}</h3> {/* Back card title formatting */}
               <div className="fda-flipcard-content">
-                <p>{value || "No information available"}</p>
+              <p>{value || "No information available from the FDA"}</p>
               </div>
-              <button
-                className="fda-close-btn"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setActiveCard(null); // Close the card
-                }}
-              >
-                Close
-              </button>
             </div>
           )}
         </div>
