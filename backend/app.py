@@ -282,7 +282,7 @@ def drug_interactions():
 
     try:
         # 3) Load the TSV file
-        df = pd.read_csv('drugs.tsv', sep='\t')
+        df = pd.read_csv('./backend/drugs.tsv', sep='\t')
 
         # 4) Filter rows where (drug1 == userDrug1 & drug2 == userDrug2) OR
         #    (drug1 == userDrug2 & drug2 == userDrug1), ignoring case
