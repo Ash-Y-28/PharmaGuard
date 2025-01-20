@@ -2,3 +2,4 @@ venv/
 *.ipynb
 .env
 vercel.json
+*.tsv

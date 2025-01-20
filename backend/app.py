@@ -268,9 +268,6 @@ openai.api_key = openai.API_KEY
 
 @app.route('/drug_interactions', methods=['GET'])
 def drug_interactions():
-
-    openai.API_KEY = os.getenv("OPENAI_API_KEY").encode("utf-8").decode("utf-8")
-    print("Loaded OpenAI API Key:", openai.API_KEY)
     
     # 1) Retrieve drug1 and drug2 from query parameters
     drug1 = request.args.get('drug1', '').strip()
@@ -281,27 +278,24 @@ def drug_interactions():
         return jsonify({'error': 'Both "drug1" and "drug2" are required'}), 400
 
     try:
-        # 3) Load the TSV file
-        df = pd.read_csv('./backend/drugs.tsv', sep='\t')
+        # Connect to SQLite database
+        conn = sqlite3.connect('./backend/drugs.db')
+        cursor = conn.cursor()
 
-        # 4) Filter rows where (drug1 == userDrug1 & drug2 == userDrug2) OR
-        #    (drug1 == userDrug2 & drug2 == userDrug1), ignoring case
-        interactions = df[
-            (
-                df['drug1'].str.contains(drug1, case=False, na=False) &
-                df['drug2'].str.contains(drug2, case=False, na=False)
-            )
-            |
-            (
-                df['drug1'].str.contains(drug2, case=False, na=False) &
-                df['drug2'].str.contains(drug1, case=False, na=False)
-            )
-        ]
+        # Query database for interactions
+        query = """
+        SELECT drug1, drug2, event_name, proportional_reporting_ratio
+        FROM drugs
+        WHERE (drug1 = ? AND drug2 = ?) OR (drug1 = ? AND drug2 = ?)
+        """
+        cursor.execute(query, (drug1, drug2, drug2, drug1))
+        interactions = cursor.fetchall()
+        conn.close()
 
         # -----------------------------------------------
         # Fallback AI logic if no local data is found
         # -----------------------------------------------
-        if interactions.empty:
+        if not interactions:
             # Instead of just returning "No interactions found," call OpenAI
             prompt_text = f"""
             I have two drugs: {drug1} and {drug2}.
@@ -398,25 +392,25 @@ def drug_interactions():
         }
 
         # 6) Iterate through matching rows, categorize by PRR and severity
-        def assign_severity(prr, pvalue):
+        def assign_severity(prr):
             """
             Assign severity level based on PRR and p-value.
             """
-            if prr > 50 and pvalue < 0.01:
+            if prr > 50:
                 return "high"
-            elif prr > 20 and pvalue >= 0.01:
+            elif prr > 20:
                 return "medium"
             else:
                 return "low"
 
-        for _, row in interactions.iterrows():
-            prr = float(row.get('proportional_reporting_ratio', 0))
-            pvalue = float(row.get('pvalue', 1))  # Default pvalue to 1 if not present
-            drug_combination = f"{row['drug1']} + {row['drug2']}"
-            event = row['event_name']
+        for row in interactions:
+            drug1, drug2, event_name, prr = row  # Unpack tuple directly
+            prr = float(prr)  # Convert PRR to float
+            drug_combination = f"{drug1} + {drug2}"  # Combine drug names
+            event = event_name  # Get event name
 
             # Determine severity
-            severity = assign_severity(prr, pvalue)
+            severity = assign_severity(prr)
 
             # Categorize based on PRR (existing logic)
             if prr < 5:
