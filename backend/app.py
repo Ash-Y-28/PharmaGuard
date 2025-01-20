@@ -245,8 +245,6 @@ def login():
 @app.route('/guest_login', methods=['POST'])
 def guest_login():
     try:
-        print("SECRET_KEY:", app.config['SECRET_KEY'])  # Debugging the key
-        print("Username: guest")  # Debugging the payload
         # Generate a guest token
         token = jwt.encode(
             {'username': 'guest', 'exp': datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=1)},
