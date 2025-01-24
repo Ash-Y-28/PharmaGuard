@@ -18,7 +18,7 @@ const Signup: React.FC = () => {
   const validateUsername = async (username: string) => {
     try {
       const response = await axios.get(
-        `http://127.0.0.1:5003/check_username?username=${username}`
+        `https://pharmaguard.onrender.com/check_username?username=${username}`
       );
       setUsernameAvailable(response.data.available);
       setUsernameSuggestions(response.data.suggestions || []);
@@ -32,7 +32,7 @@ const Signup: React.FC = () => {
   const validateEmail = async (email: string) => {
     try {
       const response = await axios.get(
-        `http://127.0.0.1:5003/check_email?email=${email}`
+        `https://pharmaguard.onrender.com/check_email?email=${email}`
       );
       setEmailExists(response.data.exists);
     } catch (err) {
@@ -47,7 +47,7 @@ const Signup: React.FC = () => {
     setError("");
 
     try {
-        const response = await fetch("http://localhost:5003/register", {
+        const response = await fetch("https://pharmaguard.onrender.com/register", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ username, password, email })

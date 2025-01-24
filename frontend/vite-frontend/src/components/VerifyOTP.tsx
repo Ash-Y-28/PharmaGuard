@@ -13,7 +13,7 @@ const VerifyOTP: React.FC = () => {
     try {
         const token = window.sessionStorage.getItem("jwt_token"); // Get JWT from sessionStorage
 
-        const response = await fetch("http://127.0.0.1:5003/verify_otp", {
+        const response = await fetch("https://pharmaguard.onrender.com/verify_otp", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

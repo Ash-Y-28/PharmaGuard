@@ -41,14 +41,14 @@ const DrugSearch: React.FC = () => {
           setIsLoading(false);
           return;
         }
-        url = `http://127.0.0.1:5003/drug_interactions?drug1=${drug1}&drug2=${drug2}`;
+        url = `https://pharmaguard.onrender.com/drug_interactions?drug1=${drug1}&drug2=${drug2}`;
       } else if (selectedResource === "FDA API") {
         if (!drugName.trim()) {
           setError("Please enter a drug name for FDA search.");
           setIsLoading(false);
           return;
         }
-        url = `http://127.0.0.1:5003/fda_interactions?drug_name=${drugName}`;
+        url = `https://pharmaguard.onrender.com/fda_interactions?drug_name=${drugName}`;
       } else {
         setError("No resource selected or unrecognized resource.");
         setIsLoading(false);

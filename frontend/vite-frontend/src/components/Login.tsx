@@ -30,7 +30,7 @@ const Login: React.FC = () => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       const response = await axios.post(
-        "http://127.0.0.1:5003/login",
+        "https://pharmaguard.onrender.com/login",
         { username, password },
         { headers: { "Content-Type": "application/json" } }
       );
@@ -68,7 +68,7 @@ const Login: React.FC = () => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       const response = await axios.post(
-        "http://127.0.0.1:5003/guest_login",
+        "https://pharmaguard.onrender.com/guest_login",
         {},
         { headers: { "Content-Type": "application/json" } }
       );
