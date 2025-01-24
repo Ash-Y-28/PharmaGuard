@@ -90,7 +90,7 @@ CORS(app)
 
 @app.route('/')
 def index():
-    return render_template('login.html')
+    return "Welcome to the new homepage!"
 
 @app.route('/check_username', methods=['GET'])
 def check_username():
