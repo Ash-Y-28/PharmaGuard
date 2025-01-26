@@ -1,4 +1,4 @@
-# PharmaGuard 🚀
+# PharmaGuard 💊
 **Your One-Stop Drug Interaction and Safety App**
 
 PharmaGuard is a web application designed to help users identify potential drug interactions and access detailed, reliable information about medications. Whether you're a healthcare professional or a patient, PharmaGuard empowers you to make safe and informed decisions with confidence.
