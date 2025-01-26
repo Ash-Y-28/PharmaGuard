@@ -27,6 +27,7 @@ PharmaGuard is built using the following technologies:
 - **Flask**: A lightweight and efficient Python framework for backend development.
 - **SQLite**: A local database for quick and reliable storage of drug interaction data.
 - **OpenFDA API**: Fetches verified drug information from legitimate sources.
+- **OpenAI Integration**: Leverages the OpenAI API to enhance drug interaction insights.
 
 ### AI Integration
 - **OpenAI GPT-4**: Provides advanced recommendations and warnings for drug combinations.
