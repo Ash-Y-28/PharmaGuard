@@ -41,10 +41,12 @@ First, clone the repository to your local machine:
 ```bash
 git clone https://github.com/Ash-Y-28/PharmaGuard.git
 cd PharmaGuard
+```
 
 Backend Setup
 
 Navigate to the backend directory:
+
 cd backend
 
 Install the required dependencies:
