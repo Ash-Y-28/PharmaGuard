@@ -8,7 +8,7 @@ PharmaGuard is a web application designed to help users identify potential drug 
 ## Features 🌟
 - 🔍 **Drug Interaction Detection**: Analyze potential interactions using local database or AI.
 - 🧠 **AI-Powered Recommendations**: Warnings for critical drug combinations using OpenAI’s GPT-4 model.
-- - 🌐 **Responsive Design**: Fully functional across browsers and devices.
+- 🌐 **Responsive Design**: Fully functional across browsers and devices.
 - 📊 **Interactive Interface**: Easy-to-navigate design for seamless user experience.
 - 🌐 **Responsive Design**: Fully functional across browsers and devices.
 
@@ -70,9 +70,3 @@ npm run dev
 
 Open your browser and go to:
 http://localhost:3000
-
-
-
-
-
-
