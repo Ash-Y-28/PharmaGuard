@@ -37,6 +37,7 @@ PharmaGuard is built using the following technologies:
 Follow these steps to set up PharmaGuard on your local machine:
 
 ### Clone the Repository
+
 First, clone the repository to your local machine:
 ```bash
 git clone https://github.com/Ash-Y-28/PharmaGuard.git
