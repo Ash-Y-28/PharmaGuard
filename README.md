@@ -40,10 +40,13 @@ Follow these steps to set up PharmaGuard on your local machine:
 First, clone the repository to your local machine:
 ```bash
 git clone https://github.com/Ash-Y-28/PharmaGuard.git
+```
+
+```
 cd PharmaGuard
 ```
 
-Backend Setup
+## Backend Setup
 
 Navigate to the backend directory:
 ```
@@ -65,7 +68,7 @@ Start the Flask backend server:
 python app.py
 ```
 
-Frontend Setup
+## Frontend Setup
 
 Navigate to the frontend directory:
 ```
