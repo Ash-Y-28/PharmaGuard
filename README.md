@@ -92,7 +92,7 @@ Open your browser and go to:
 http://localhost:3000
 ```
 
-## Demo Video
+## Demo Video 🎬
 
 [![Watch PharmaGuard in Action](frontend/vite-frontend/src/assets/Thumbnail.webp)](https://www.youtube.com/watch?v=jQf7EI8Ftg8)
 
