@@ -46,29 +46,43 @@ cd PharmaGuard
 Backend Setup
 
 Navigate to the backend directory:
-
+```
 cd backend
+```
 
 Install the required dependencies:
+```
 pip install -r requirements.txt
+```
 
 Set up the database (if not already set up):
+```
 python setup_database.py
+```
 
 Start the Flask backend server:
+```
 python app.py
+```
 
 Frontend Setup
 
 Navigate to the frontend directory:
+```
 cd frontend
 cd vite-frontend
+```
 
 Install the necessary Node.js dependencies:
+```
 npm install
+```
 
 Start the React development server:
+```
 npm run dev
-
+```
 Open your browser and go to:
+```
 http://localhost:3000
+```
