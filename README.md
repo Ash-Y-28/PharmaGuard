@@ -34,6 +34,68 @@ PharmaGuard is built using the following technologies:
 
 ---
 
+## Repository Structure 📁
+
+```
+PharmaGuard/
+├── backend/
+│   ├── .vercel/               # Vercel-related config (auto-generated)
+│   ├── app.py                 # Main Flask application entry point
+│   ├── drugs.db               # SQLite database file
+│   ├── drugs.tsv              # Original TSV data for drug info
+│   ├── filtered_drugs.tsv     # Filtered dataset
+│   ├── insert_user.py         # Utility/script to insert users into DB
+│   ├── requirements.txt       # Python dependencies
+│   ├── setup_database.ipynb   # Jupyter notebook for database setup
+│   ├── setup_database.py      # Script for DB initialization
+│   ├── test.ipynb             # Notebook for testing or experimentation
+│   └── users.db               # SQLite database for user info
+│
+└── frontend/
+    ├── static/                # Static files (CSS, images, etc.) if used by Flask
+    ├── templates/             # HTML templates if used by Flask
+    └── vite-frontend/
+        ├── dist/              # Production build output
+        ├── node_modules/      # Node.js dependencies
+        ├── public/            # Public assets served as root
+        ├── src/
+        │   ├── assets/        # Images, icons, etc.
+        │   ├── components/
+        │   │   ├── ChooseResource.css
+        │   │   ├── ChooseResource.tsx
+        │   │   ├── DrugSearch.css
+        │   │   ├── DrugSearch.tsx
+        │   │   ├── FDAFlipCards.css
+        │   │   ├── FDAFlipCards.tsx
+        │   │   ├── FDAsearch.tsx
+        │   │   ├── FlipCard.tsx
+        │   │   ├── Login.css
+        │   │   ├── Login.tsx
+        │   │   ├── Medical.tsx
+        │   │   ├── ParticlesBackground.tsx
+        │   │   ├── Signup.tsx
+        │   │   └── VerifyOTP.tsx
+        │   ├── services/      # API calls or utility functions
+        │   ├── App.css
+        │   ├── App.tsx
+        │   ├── index.css
+        │   ├── main.tsx
+        │   └── vite-env.d.ts
+        ├── .gitignore
+        ├── eslint.config.js
+        ├── index.html
+        ├── package-lock.json
+        ├── package.json
+        ├── README.md
+        ├── tsconfig.app.json
+        ├── tsconfig.json
+        ├── tsconfig.node.json
+        ├── vercel.json        # Vercel deployment config
+        └── vite.config.ts     # Vite configuration
+
+
+```
+
 ## How to Run the Project Locally  ⚙️ 
 Follow these steps to set up PharmaGuard on your local machine:
 
